@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0afadef7-f3ed-4533-a707-78c852d11f59}</ProjectGuid>
+    <RootNamespace>ActionGame</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Info_tech_eng\FE\VS Express 2013 for Desktop\カメラライブラリ;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Custom</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>false</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Info_tech_eng\FE\VS Express 2013 for Desktop\カメラライブラリ;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\DxText.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Dx_ParticleData.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Dx_PostEffect.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Dx_Wave.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Shader\ShaderParticle.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Shader\ShaderPostEffect.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Shader\ShaderWaveCom.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapperOption\Shader\ShaderWaveDraw.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\Dx12Process.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx12ProcessCore.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\DxCommandQueue.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\DxEnum.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\DxStruct.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_CommandListObj.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_Device.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_ShaderHolder.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_Util.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\Shader2D.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\Shader3D.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderCalculateLighting.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderCommonParameters.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderCommonPS.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderCommonTriangleGS.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderCommonTriangleHSDS.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderGsOutput.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderMesh.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderMesh_D.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderNormalTangent.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderSkinMesh.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderSkinMeshCom.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\ShaderSkinMesh_D.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\DXR\DXR_Basic.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\DXR\ShaderDXR\ShaderBasicDXR.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\DXR\ShaderDXR\ShaderCommonDXR.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\DXR\ShaderDXR\ShaderParametersDXR.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\DxSkinnedCom.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_MeshData.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_PolygonData.h" />
+    <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_SkinMesh.h" />
+    <ClInclude Include="..\..\Common\DirectInputWrapper\DxInput.h" />
+    <ClInclude Include="..\..\Common\DirectShowWrapper\Camera.h" />
+    <ClInclude Include="..\..\Common\DirectShowWrapper\DsProcess.h" />
+    <ClInclude Include="..\..\Common\DirectShowWrapper\Movie.h" />
+    <ClInclude Include="..\..\Common\DirectShowWrapper\Sound_.h" />
+    <ClInclude Include="..\..\Common\DirectStorageWrapper\DStorage.h" />
+    <ClInclude Include="..\..\Common\SearchFile\SearchFile.h" />
+    <ClInclude Include="..\..\Common\TextureLoader\MicroSoftLibrary\d3dx12.h" />
+    <ClInclude Include="..\..\Common\TextureLoader\MicroSoftLibrary\WICTextureLoader12.h" />
+    <ClInclude Include="..\..\Common\TextureLoader\TextureLoader.h" />
+    <ClInclude Include="..\..\Common\Window\Control.h" />
+    <ClInclude Include="..\..\Common\Window\Win.h" />
+    <ClInclude Include="..\..\CoordTf\CoordTf.h" />
+    <ClInclude Include="..\..\CreateGeometry\CreateGeometry.h" />
+    <ClInclude Include="..\..\DecompressDeflate\DecompressDeflate.h" />
+    <ClInclude Include="..\..\FbxLoader\FbxLoader.h" />
+    <ClInclude Include="..\..\FbxLoader\FbxMeshNode.h" />
+    <ClInclude Include="..\..\JPGLoader\JPGLoader.h" />
+    <ClInclude Include="..\..\MultiThread\MultiThread.h" />
+    <ClInclude Include="..\..\PNGLoader\PNGLoader.h" />
+    <ClInclude Include="..\..\UserInterface\UserInterface.h" />
+    <ClInclude Include="source\CameraPos\CameraPos.h" />
+    <ClInclude Include="source\DelayPosition\DelayPosition.h" />
+    <ClInclude Include="source\SkinObj\Enemy.h" />
+    <ClInclude Include="source\SkinObj\Hero.h" />
+    <ClInclude Include="source\SkinObj\SkinObj.h" />
+    <ClInclude Include="source\Vector\Vector.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\Direct3DWrapperOption\DxText.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapperOption\Dx_ParticleData.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapperOption\Dx_PostEffect.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapperOption\Dx_Wave.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx12ProcessCore.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\DxCommandQueue.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_BasicPolygon.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_CommandListObj.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_Common.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_Device.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_PolygonData2D.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_ShaderHolder.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_Util.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\DXR\DXR_Basic.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\DxSkinnedCom.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_MeshData.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_PolygonData.cpp" />
+    <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Dx_SkinMesh.cpp" />
+    <ClCompile Include="..\..\Common\DirectInputWrapper\DxInput.cpp" />
+    <ClCompile Include="..\..\Common\DirectShowWrapper\Camera.cpp" />
+    <ClCompile Include="..\..\Common\DirectShowWrapper\DsProcess_DsProcess.cpp" />
+    <ClCompile Include="..\..\Common\DirectShowWrapper\Movie_GetFrame.cpp" />
+    <ClCompile Include="..\..\Common\DirectShowWrapper\Sound__sound.cpp" />
+    <ClCompile Include="..\..\Common\DirectStorageWrapper\DStorage.cpp" />
+    <ClCompile Include="..\..\Common\SearchFile\SearchFile.cpp" />
+    <ClCompile Include="..\..\Common\TextureLoader\MicroSoftLibrary\WICTextureLoader12.cpp" />
+    <ClCompile Include="..\..\Common\TextureLoader\TextureLoader.cpp" />
+    <ClCompile Include="..\..\Common\Window\Control_Direction.cpp" />
+    <ClCompile Include="..\..\Common\Window\Win.cpp" />
+    <ClCompile Include="..\..\CoordTf\CoordTf.cpp" />
+    <ClCompile Include="..\..\CreateGeometry\CreateGeometry.cpp" />
+    <ClCompile Include="..\..\DecompressDeflate\DecompressDeflate.cpp" />
+    <ClCompile Include="..\..\FbxLoader\FbxLoader.cpp" />
+    <ClCompile Include="..\..\FbxLoader\FbxMeshNode.cpp" />
+    <ClCompile Include="..\..\JPGLoader\JPGLoader.cpp" />
+    <ClCompile Include="..\..\MultiThread\MultiThread.cpp" />
+    <ClCompile Include="..\..\PNGLoader\PNGLoader.cpp" />
+    <ClCompile Include="..\..\UserInterface\UserInterface.cpp" />
+    <ClCompile Include="source\CameraPos\CameraPos.cpp" />
+    <ClCompile Include="source\DelayPosition\DelayPosition.cpp" />
+    <ClCompile Include="source\Entry.cpp" />
+    <ClCompile Include="source\SkinObj\Enemy.cpp" />
+    <ClCompile Include="source\SkinObj\Hero.cpp" />
+    <ClCompile Include="source\SkinObj\SkinObj.cpp" />
+    <ClCompile Include="source\Vector\Vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Direct3D.DirectStorage.1.0.2\build\native\targets\Microsoft.Direct3D.DirectStorage.targets" Condition="Exists('..\packages\Microsoft.Direct3D.DirectStorage.1.0.2\build\native\targets\Microsoft.Direct3D.DirectStorage.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Direct3D.DirectStorage.1.0.2\build\native\targets\Microsoft.Direct3D.DirectStorage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Direct3D.DirectStorage.1.0.2\build\native\targets\Microsoft.Direct3D.DirectStorage.targets'))" />
+  </Target>
+</Project>
