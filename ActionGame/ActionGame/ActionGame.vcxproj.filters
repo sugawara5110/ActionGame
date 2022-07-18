@@ -94,7 +94,10 @@
     <Filter Include="Game\DelayPosition">
       <UniqueIdentifier>{9c3a0806-3209-49f5-9b8d-f08577d615ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Vector">
+    <Filter Include="Game\CollisionTest">
+      <UniqueIdentifier>{30316b6e-747c-415d-8767-e48b8291af1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Util">
       <UniqueIdentifier>{8a925a72-c33b-408f-be20-87c652c99596}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -294,8 +297,11 @@
     <ClInclude Include="source\DelayPosition\DelayPosition.h">
       <Filter>Game\DelayPosition</Filter>
     </ClInclude>
-    <ClInclude Include="source\Vector\Vector.h">
-      <Filter>Game\Vector</Filter>
+    <ClInclude Include="source\CollisionTest\CollisionTest.h">
+      <Filter>Game\CollisionTest</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Util\Util.h">
+      <Filter>Game\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -429,8 +435,11 @@
     <ClCompile Include="source\DelayPosition\DelayPosition.cpp">
       <Filter>Game\DelayPosition</Filter>
     </ClCompile>
-    <ClCompile Include="source\Vector\Vector.cpp">
-      <Filter>Game\Vector</Filter>
+    <ClCompile Include="source\CollisionTest\CollisionTest.cpp">
+      <Filter>Game\CollisionTest</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Util\Util.cpp">
+      <Filter>Game\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

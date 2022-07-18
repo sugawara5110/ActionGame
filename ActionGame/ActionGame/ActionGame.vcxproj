@@ -204,11 +204,12 @@
     <ClInclude Include="..\..\PNGLoader\PNGLoader.h" />
     <ClInclude Include="..\..\UserInterface\UserInterface.h" />
     <ClInclude Include="source\CameraPos\CameraPos.h" />
+    <ClInclude Include="source\CollisionTest\CollisionTest.h" />
     <ClInclude Include="source\DelayPosition\DelayPosition.h" />
     <ClInclude Include="source\SkinObj\Enemy.h" />
     <ClInclude Include="source\SkinObj\Hero.h" />
     <ClInclude Include="source\SkinObj\SkinObj.h" />
-    <ClInclude Include="source\Vector\Vector.h" />
+    <ClInclude Include="source\Util\Util.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Direct3DWrapperOption\DxText.cpp" />
@@ -250,12 +251,13 @@
     <ClCompile Include="..\..\PNGLoader\PNGLoader.cpp" />
     <ClCompile Include="..\..\UserInterface\UserInterface.cpp" />
     <ClCompile Include="source\CameraPos\CameraPos.cpp" />
+    <ClCompile Include="source\CollisionTest\CollisionTest.cpp" />
     <ClCompile Include="source\DelayPosition\DelayPosition.cpp" />
     <ClCompile Include="source\Entry.cpp" />
     <ClCompile Include="source\SkinObj\Enemy.cpp" />
     <ClCompile Include="source\SkinObj\Hero.cpp" />
     <ClCompile Include="source\SkinObj\SkinObj.cpp" />
-    <ClCompile Include="source\Vector\Vector.cpp" />
+    <ClCompile Include="source\Util\Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

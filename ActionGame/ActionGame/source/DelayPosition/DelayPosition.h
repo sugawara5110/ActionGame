@@ -13,6 +13,7 @@ private:
 public:
 	void init(CoordTf::VECTOR3 current);
 	bool update(CoordTf::VECTOR3 target, float delay, float range);
+	void ImmediatelyUpdate(CoordTf::VECTOR3 target);
 	CoordTf::VECTOR3 getCurrent();
 };
 
@@ -24,6 +25,7 @@ private:
 public:
 	void init(float current);
 	bool update(float target, float delay, float range);
+	void ImmediatelyUpdate(float target);
 	float getCurrent();
 };
 

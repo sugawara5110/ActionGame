@@ -19,7 +19,8 @@
 #include"SkinObj/Hero.h"
 #include"SkinObj/Enemy.h"
 #include"CameraPos/CameraPos.h"
-#include "Vector/Vector.h"
+#include"CollisionTest/CollisionTest.h"
+#include"Util/Util.h"
 
 #define CURRWIDTH 1024
 #define CURRHEIGHT 768
@@ -71,6 +72,8 @@ namespace {
 	Control* con;
 	VariableBloom* variableBloom;
 	CameraPos cam;
+	UserInterfaceMeter ui;
+	CollisionTest ctest;
 }
 
 #include <vector>
@@ -112,15 +115,16 @@ void createTexture2(Dx12Process* dx) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
+	CoordTf::VECTOR3 aaa1 = Util::getSphereNormal({ 0,0,0 }, {1,1,0});
+	CoordTf::VECTOR3 aaa2 = Util::getDirectionVector({ 2,1,0 }, {1,1,0});
+
+	CoordTf::VECTOR3 v3aaa =
+		Util::getWallRubbingVector({ 0,0,0 }, { 1,1,0 }, { 2,1,0 });
+
 	srand((unsigned)time(NULL));
 
 	if (Createwindow(&hWnd, hInstance, nCmdShow, CURRWIDTH, CURRHEIGHT, L"ActionGame") == -1)return -1;
 
-	float aaa = Vector::getThetaXY({ 0,-1}, { 0,0});
-	// { 1,0}, { 0,0} = 0      
-	// { 0,1}, { 0,0} = 90     
-	// { -1,0}, { 0,0} = 180   
-	// { 0,-1}, { 0,0} = 270   
 	//DirectX12ラッパー
 	Dx12Process::InstanceCreate();
 	dx = Dx12Process::GetInstance();
@@ -137,6 +141,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	DxInput* di = DxInput::GetInstance();
 	di->create(hWnd);
 	di->SetWindowMode(true);
+	ui.setNumMeter(1);
 	di->setCorrectionX(1.015f);
 	di->setCorrectionY(1.055f);
 
@@ -188,33 +193,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	pd[3].setDivideArr(arr, 3);
 
 	bil->GetBufferBill(2);
-	bil->SetVertex(0, { 50,0,7 });
-	bil->SetVertex(1, { -50,0,18 });
+	bil->SetVertex(0, { 100,0,7 });
+	bil->SetVertex(1, { -100,0,18 });
 	bil->TextureInit(256, 256);
 
-	pd[0].GetVBarray(CONTROL_POINT, 1);
-	pd[1].GetVBarray(SQUARE, 3);
+	pd[0].GetVBarray(SQUARE, 4);
+	pd[1].GetVBarray(SQUARE, 1);
+	pd[2].GetVBarray(SQUARE, 1);
+	pd[3].GetVBarray(SQUARE, 1);
 	pdbl[0].GetVBarray(SQUARE, 1);
 	pdbl[1].GetVBarray(SQUARE, 1);
-	pd[2].GetVBarray(SQUARE, 1);
-	pd[3].GetVBarray(CONTROL_POINT, 1);
 
 	VECTOR3 v3[] = { {},{2,0,0},{3,0,0} };
 	VECTOR3 v3s[] = { {1,1,1},{1,1,1},{1,1,1} };
 
-	Vertex* sv = (Vertex*)CreateGeometry::createSphere(10, 10, 3, v3, v3s, false);
-	unsigned int* svI = CreateGeometry::createSphereIndex(10, 10, 3);
+	Vertex* sv = (Vertex*)CreateGeometry::createSphere(10, 10, 1, v3, v3s, false);
+	unsigned int* svI = CreateGeometry::createSphereIndex(10, 10, 1);
 
-	Vertex* v = (Vertex*)CreateGeometry::createCube(2, v3, v3s, false);
+	Vertex* v = (Vertex*)CreateGeometry::createCube(1, v3, v3s, false);
 	Vertex* vRev = (Vertex*)CreateGeometry::createCube(1, v3, v3s, true);
 
-	unsigned int* ind = CreateGeometry::createCubeIndex(2);
-	pd[0].setVertex(v, 24 * 2, ind, 36 * 2);
-	pd[1].setVertex(sv, 11 * 11 * 3, svI, 10 * 10 * 6 * 3);
-	pdbl[0].setVertex(v, 24, ind, 36);
-	pdbl[1].setVertex(v, 24, ind, 36);
+	unsigned int* ind = CreateGeometry::createCubeIndex(1);
+	pd[0].setVertex(sv, 11 * 11, svI, 10 * 10 * 6);
+	pd[1].setVertex(v, 24, ind, 36);
 	pd[2].setVertex(v, 24, ind, 36);
 	pd[3].setVertex(ver4, 4, index6, 6);
+
+	pdbl[0].setVertex(v, 24, ind, 36);
+	pdbl[1].setVertex(v, 24, ind, 36);
 
 	wav->SetCommandList(0);
 	wav->GetVBarray(1);
@@ -227,11 +233,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	soto->GetVBarray(SQUARE, 1);
 	soto->setVertex(vRev, 24, ind, 36);
 
-	ARR_DELETE(sv);
-	ARR_DELETE(svI);
 	ARR_DELETE(v);
 	ARR_DELETE(vRev);
 	ARR_DELETE(ind);
+	ARR_DELETE(sv);
+	ARR_DELETE(svI);
 
 	dx->Bigin(0);
 	sk1->create();
@@ -254,6 +260,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	variableBloom->SetCommandList(0);
 	variableBloom->init(bp, bpIndex, true, 7, gaSize);
+
+	int cNum1 = en->getNumCollisionParameter();
+	int cNum2 = sk1->getNumCollisionParameter();
+	std::unique_ptr<CollisionParameter* []> cPara;
+	cPara = std::make_unique<CollisionParameter* []>(cNum1 + cNum2);
+	int cCnt = 0;
+	for (int i = 0; i < cNum1; i++) {
+		cPara[cCnt++] = en->getCollisionParameter(i);
+	}
+	for (int i = 0; i < cNum2; i++) {
+		cPara[cCnt++] = sk1->getCollisionParameter(i);
+	}
+
+	ctest.init(cPara.get(), cNum1 + cNum2, nullptr, 0);
+
 	bil->setMaterialType(EMISSIVE);
 	bil->CreateBillboard(true, true);
 	
@@ -267,9 +288,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		dx->GetTexNumber("ground3.jpg"), true, true, true);
 	//gr->getParameter()->updateF = true;
 
-	pd[0].Create(true, dx->GetTexNumber("wall1.jpg"),
-		dx->GetTexNumber("wall1Nor.png"),
-		dx->GetTexNumber("wall1.jpg"), false, false, false);
+	pd[0].Create(true, dx->GetTexNumber("siro.png"),
+		-1/*dx->GetTexNumber("wall1Nor.png")*/,
+		-1/*dx->GetTexNumber("wall1.jpg")*/, true, true, false);
 	pd[1].setMaterialType(METALLIC);
 	pd[1].Create(true, dx->GetTexNumber("ceiling5.jpg"), -1/*dx->GetTexNumber("ceiling5Nor.png")*/, -1, false, true);
 	pdbl[0].setMaterialType(EMISSIVE);
@@ -284,6 +305,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	soto->Create(true, dx->GetTexNumber("wall1.jpg"),
 		dx->GetTexNumber("wall1Nor.png"),
 		dx->GetTexNumber("wall1.jpg"), false, false);
+
+	ui.create(0, 200, 50, "衝突位置テスト");
 
 	dx->End(0);
 	dx->RunGpu();
@@ -365,6 +388,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		dx->Bigin(4);
 		dx->BiginDraw(4, false);
+		ui.Draw(0, 4);
 		text->Draw(4);
 		dx->EndDraw(4);
 		dx->End(4);
@@ -414,9 +438,27 @@ void update() {
 	thetaO = thetaO += th1;
 	if (thetaO > 360)thetaO = 0;
 
-	pd[0].Instancing({ (float)35, 0, 20 },
+	static int numVer = 0;//テスト用
+	DxText::GetInstance()->
+		UpDateValue(numVer, 10, 10, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+	
+	//CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
+	//CoordTf::VECTOR3 vPos1 = en->getAttackParameter(1)->Pos;
+	CoordTf::VECTOR3 vPos2 = en->getCollisionParameter(0)->Pos;
+	CoordTf::VECTOR3 vPos3 = sk1->getCollisionParameter(0)->Pos;
+
+	/*pd[0].Instancing(vPos,
 		{ 0, 0, thetaO },
-		{ 7, 7, 7 }, { 0, 0, 0, 0 });
+		{ 10, 10, 10 }, { 0, 0, 0, -0.3f });
+	pd[0].Instancing(vPos1,
+		{ 0, 0, thetaO },
+		{ 10, 10, 10 }, { 0, 0, 0, -0.3f });*/
+	pd[0].Instancing(vPos2,
+		{ 0, 0, thetaO },
+		{ 35, 35, 35 }, { 0, -1, -1, -0.4f });
+	pd[0].Instancing(vPos3,
+		{ 0, 0, thetaO },
+		{ 10, 10, 10 }, { 0, -1, -1, -0.4f });
 	pd[0].InstancingUpdate(
 		0.2f,
 		0.2f,
@@ -425,11 +467,10 @@ void update() {
 	float g = (float)(rand() % 11) * 0.1f;
 	float b1 = (float)(rand() % 11) * 0.1f;
 
-	for (int b = 0; b < 3; b++) {
-		pd[1].Instancing({ (float)-38, b * 10.0f, 25 },
-			{ 0, 0, thetaO },
-			{ 7, 7, 7 }, { -r, -g, -b1, 0 });
-	}
+	pd[1].Instancing({ (float)-38, 10.0f, 25 },
+		{ 0, 0, thetaO },
+		{ 7, 7, 7 }, { -r, -g, -b1, 0 });
+
 	pd[1].InstancingUpdate(
 		0,
 		4.0f);
@@ -511,6 +552,18 @@ void update() {
 	else {
 		bil->DrawOff();
 	}
+
+	static bool uiF = false;
+	if (!uiF) {
+		ui.updatePos(0, 1, 1, 0, 0);
+		uiF = true;
+	}
+	else {
+		numVer = ui.updatePosMouse(0, 0.0f) * 3000;
+	}
+
+	ctest.update();
+
 	text->UpDate();
 }
 

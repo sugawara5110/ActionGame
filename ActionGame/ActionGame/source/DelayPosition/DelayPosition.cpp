@@ -2,7 +2,7 @@
 
 #include "DelayPosition.h"
 #include <cmath>
-#include "../Vector/Vector.h"
+#include "../Util/Util.h"
 
 void DelayPosition::init(CoordTf::VECTOR3 current) {
 	Current = current;
@@ -34,6 +34,10 @@ bool DelayPosition::update(CoordTf::VECTOR3 target, float delay, float range) {
 	return false;
 }
 
+void DelayPosition::ImmediatelyUpdate(CoordTf::VECTOR3 target) {
+	Current = target;
+}
+
 CoordTf::VECTOR3 DelayPosition::getCurrent() {
 	return Current;
 }
@@ -60,11 +64,15 @@ bool DelayTheta::update(float target, float delay, float range) {
 		}
 	}
 
-	Vector::thetaCalc(&Current, 0.0f);
+	Util::thetaCalc(&Current, 0.0f);
 
 	if (cnt == 0)return true;
 
 	return false;
+}
+
+void DelayTheta::ImmediatelyUpdate(float target) {
+	Current = target;
 }
 
 float DelayTheta::getCurrent() {
