@@ -20,7 +20,7 @@ void Enemy::create() {
 	lastPos.as(0.0f, -160.0f);
 	dtheta.init(180.0f);
 	AnimThreshold = 50.0f;
-	scale = 0.13f;
+	scale = 0.11f;
 
 	numCp = 1;
 	cp = new CollisionParameter[numCp];
@@ -28,14 +28,16 @@ void Enemy::create() {
 		cp[i].Pos.as(0.0f, -150.0f, -15.0f);
 		cp[i].nextPos.as(0.0f, -150.0f, -15.0f);
 		cp[i].meshNo = 0;
-		cp[i].Range = 35.0f;
+		cp[i].Range = 30.0f;
 		cp[i].Weight = 10.0f;
+		cp[i].HP = 2000;
 	}
-	numAp = 2;
+	numAp = 1;
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
-		ap[i].Range = 10.0f;
+		ap[i].Range = 20.0f;
+		ap[i].att = 20.0f;
 	}
 }
 
@@ -43,9 +45,14 @@ static T_float tfloat;
 
 void Enemy::update(CoordTf::VECTOR3 target) {
 
-	if (cp[0].hit) {
+	if (cp[0].Chit) {
 		dpos.ImmediatelyUpdate(cp[0].Pos);
-		cp[0].hit = false;
+		cp[0].Chit = false;
+	}
+
+	if (cp[0].Ahit) {
+		cp[0].Ahit = false;
+		cp[0].down = true;
 	}
 
 	float m = tfloat.Add(0.5f);
@@ -53,7 +60,11 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		thetaRangeIndex = 1 - thetaRangeIndex;
 	}
 
-	Update(meshIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex);
+	if (Update(meshIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
+		if (cp[0].down) {
+			cp[0].down = false;
+		}
+	}
 	lastPos.as(dpos.getCurrent().x, dpos.getCurrent().y);
 
 	if (dpos.update(target, 0.003f, AnimThreshold)) {
@@ -68,6 +79,5 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 	cp[0].nextPos = dpos.getCurrent();
 	theta = dtheta.getCurrent();
 
-	ap[0].Pos = GetVertexPosition(1, 841);//¶˜r841
-	ap[1].Pos = GetVertexPosition(1, 1320);//‰E˜r1320
+	ap[0].Pos = GetVertexPosition(1, 1320);//‰E˜r1320
 }

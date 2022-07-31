@@ -44,99 +44,121 @@ void Hero::create() {
 	cp[0].meshNo = 1;
 	cp[0].Range = 10.0f;
 	cp[0].Weight = 5.0f;
+	cp[0].HP = 1000;
+
+	numAp = 2;
+	ap = new AttackParameter[numAp];
+	for (int i = 0; i < numAp; i++) {
+		ap[i].meshNo = 1;
+		ap[i].Range = 4.0f;
+		ap[i].att = 10.0f;
+	}
 }
 
 static T_float tfloat;
 
 void Hero::update() {
 
-	if (cp[0].hit)cp[0].hit = false;
+	if (cp[0].Chit)cp[0].Chit = false;
+
+	if (cp[0].Ahit) {
+		cp[0].Ahit = false;
+		cp[0].down = true;
+	}
 
 	float m = tfloat.Add(1.0f);
 	if (Update(meshIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0,theta }, { scale,scale,scale }, internalIndex)) {
 		meshIndex = 0;
 		internalIndex = 0;
+		if (cp[0].down) {
+			cp[0].down = false;
+		}
 	}
 
 	float addMov = 0.0f;
 
-	switch (DxInput::GetInstance()->checkKeyDownNo()) {
-	case DIK_NUMPAD0:
-		break;
-	case DIK_NUMPAD1:
-		meshIndex = 0;
-		internalIndex = 0;
-		Util::thetaCalc(&theta, -tfloat.Add(0.3f));
-		break;
-	case DIK_NUMPAD2:
-		meshIndex = 4;
-		internalIndex = 0;
-		addMov = tfloat.Add(0.05f);
-		break;
-	case DIK_NUMPAD3:
-		meshIndex = 0;
-		internalIndex = 0;
-		Util::thetaCalc(&theta, tfloat.Add(0.3f));
-		break;
-	case DIK_NUMPAD4:
-		meshIndex = 1;
-		internalIndex = 0;
-		addMov = -tfloat.Add(0.1f);
-		Util::thetaCalc(&theta, -tfloat.Add(0.2f));
-		break;
-	case DIK_NUMPAD5:
-		break;
-	case DIK_NUMPAD6:
-		meshIndex = 1;
-		internalIndex = 0;
-		addMov = -tfloat.Add(0.1f);
-		Util::thetaCalc(&theta, tfloat.Add(0.2f));
-		break;
-	case DIK_NUMPAD7:
-		meshIndex = 1;
-		internalIndex = 0;
-		addMov = -tfloat.Add(0.1f);
-		Util::thetaCalc(&theta, -tfloat.Add(0.1f));
-		break;
-	case DIK_NUMPAD8:
-		meshIndex = 1;
-		internalIndex = 0;
-		addMov = -tfloat.Add(0.1f);
-		break;
-	case DIK_NUMPAD9:
-		meshIndex = 1;
-		internalIndex = 0;
-		addMov = -tfloat.Add(0.1f);
-		Util::thetaCalc(&theta, tfloat.Add(0.1f));
-		break;
+	if (!cp[0].down) {
+		switch (DxInput::GetInstance()->checkKeyDownNo()) {
+		case DIK_NUMPAD0:
+			break;
+		case DIK_NUMPAD1:
+			meshIndex = 0;
+			internalIndex = 0;
+			Util::thetaCalc(&theta, -tfloat.Add(0.3f));
+			break;
+		case DIK_NUMPAD2:
+			meshIndex = 4;
+			internalIndex = 0;
+			addMov = tfloat.Add(0.05f);
+			break;
+		case DIK_NUMPAD3:
+			meshIndex = 0;
+			internalIndex = 0;
+			Util::thetaCalc(&theta, tfloat.Add(0.3f));
+			break;
+		case DIK_NUMPAD4:
+			meshIndex = 1;
+			internalIndex = 0;
+			addMov = -tfloat.Add(0.1f);
+			Util::thetaCalc(&theta, -tfloat.Add(0.2f));
+			break;
+		case DIK_NUMPAD5:
+			break;
+		case DIK_NUMPAD6:
+			meshIndex = 1;
+			internalIndex = 0;
+			addMov = -tfloat.Add(0.1f);
+			Util::thetaCalc(&theta, tfloat.Add(0.2f));
+			break;
+		case DIK_NUMPAD7:
+			meshIndex = 1;
+			internalIndex = 0;
+			addMov = -tfloat.Add(0.1f);
+			Util::thetaCalc(&theta, -tfloat.Add(0.1f));
+			break;
+		case DIK_NUMPAD8:
+			meshIndex = 1;
+			internalIndex = 0;
+			addMov = -tfloat.Add(0.1f);
+			break;
+		case DIK_NUMPAD9:
+			meshIndex = 1;
+			internalIndex = 0;
+			addMov = -tfloat.Add(0.1f);
+			Util::thetaCalc(&theta, tfloat.Add(0.1f));
+			break;
+		}
+		switch (DxInput::GetInstance()->checkKeyActionNo()) {
+		case DIK_A:
+			meshIndex = 0;
+			internalIndex = 0;
+			break;
+		case DIK_S:
+
+			break;
+		case DIK_D:
+			break;
+		case DIK_F:
+			meshIndex = 2;
+			internalIndex = 0;
+			break;
+		case DIK_G:
+			meshIndex = 3;
+			internalIndex = 0;
+			break;
+		case DIK_H:
+			meshIndex = 3;
+			internalIndex = 1;
+			break;
+		case DIK_J:
+			meshIndex = 3;
+			internalIndex = 2;
+			break;
+		}
 	}
-	switch (DxInput::GetInstance()->checkKeyActionNo()) {
-	case DIK_A:
-		meshIndex = 0;
-		internalIndex = 0;
-		break;
-	case DIK_S:
+	else {
 		meshIndex = 0;
 		internalIndex = 1;
-		break;
-	case DIK_D:
-		break;
-	case DIK_F:
-		meshIndex = 2;
-		internalIndex = 0;
-		break;
-	case DIK_G:
-		meshIndex = 3;
-		internalIndex = 0;
-		break;
-	case DIK_H:
-		meshIndex = 3;
-		internalIndex = 1;
-		break;
-	case DIK_J:
-		meshIndex = 3;
-		internalIndex = 2;
-		break;
 	}
 	using namespace CoordTf;
 
@@ -147,4 +169,7 @@ void Hero::update() {
 	cp[0].nextPos.x = cp[0].Pos.x + pAdd.x;
 	cp[0].nextPos.y = cp[0].Pos.y + pAdd.y;
 	cp[0].nextPos.z = cp[0].Pos.z + pAdd.z;
+
+	ap[0].Pos = GetVertexPosition(1, 1515);//ç∂éË mesh1, 1515
+	ap[1].Pos = GetVertexPosition(6, 382);//ç∂ë´ mesh6, 382
 }

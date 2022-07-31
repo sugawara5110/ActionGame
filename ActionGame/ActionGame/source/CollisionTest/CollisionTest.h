@@ -12,12 +12,16 @@ struct CollisionParameter {
 	float Range = 0.0f;
 	float Weight = 0.0f;
 	int meshNo = -1;
-	bool hit = false;
+	bool Chit = false;
+	bool Ahit = false;
+	int HP = 0;
+	bool down = false;
 };
 
 struct AttackParameter {
 	CoordTf::VECTOR3 Pos = {};
 	float Range = 0.0f;
+	int att = 0;
 	int meshNo = -1;
 };
 

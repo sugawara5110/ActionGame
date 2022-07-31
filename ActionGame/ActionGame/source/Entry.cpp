@@ -115,12 +115,6 @@ void createTexture2(Dx12Process* dx) {
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 
-	CoordTf::VECTOR3 aaa1 = Util::getSphereNormal({ 0,0,0 }, {1,1,0});
-	CoordTf::VECTOR3 aaa2 = Util::getDirectionVector({ 2,1,0 }, {1,1,0});
-
-	CoordTf::VECTOR3 v3aaa =
-		Util::getWallRubbingVector({ 0,0,0 }, { 1,1,0 }, { 2,1,0 });
-
 	srand((unsigned)time(NULL));
 
 	if (Createwindow(&hWnd, hInstance, nCmdShow, CURRWIDTH, CURRHEIGHT, L"ActionGame") == -1)return -1;
@@ -197,7 +191,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bil->SetVertex(1, { -100,0,18 });
 	bil->TextureInit(256, 256);
 
-	pd[0].GetVBarray(SQUARE, 4);
+	pd[0].GetVBarray(SQUARE, 5);
 	pd[1].GetVBarray(SQUARE, 1);
 	pd[2].GetVBarray(SQUARE, 1);
 	pd[3].GetVBarray(SQUARE, 1);
@@ -273,7 +267,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		cPara[cCnt++] = sk1->getCollisionParameter(i);
 	}
 
-	ctest.init(cPara.get(), cNum1 + cNum2, nullptr, 0);
+	int aNum1 = en->getNumAttackParameter();
+	int aNum2 = sk1->getNumAttackParameter();
+	std::unique_ptr<AttackParameter* []> aPara;
+	aPara = std::make_unique<AttackParameter* []>(aNum1 + aNum2);
+	int aCnt = 0;
+	for (int i = 0; i < aNum1; i++) {
+		aPara[aCnt++] = en->getAttackParameter(i);
+	}
+	for (int i = 0; i < aNum2; i++) {
+		aPara[aCnt++] = sk1->getAttackParameter(i);
+	}
+	ctest.init(cPara.get(), cNum1 + cNum2, aPara.get(), aNum1 + aNum2);
 
 	bil->setMaterialType(EMISSIVE);
 	bil->CreateBillboard(true, true);
@@ -358,7 +363,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		dxr->allSwapIndex();
 
-		//dx->Cameraset({ cam1.x, cam1.y, cam1.z }, { 0, 0, 0 });
 		cam.update(sk1->getPos(), sk1->getTheta(), 0.03, 1.0, { 0,150,30 });
 
 		th.wait();
@@ -441,24 +445,39 @@ void update() {
 	static int numVer = 0;//テスト用
 	DxText::GetInstance()->
 		UpDateValue(numVer, 10, 10, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
-	
-	//CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
-	//CoordTf::VECTOR3 vPos1 = en->getAttackParameter(1)->Pos;
-	CoordTf::VECTOR3 vPos2 = en->getCollisionParameter(0)->Pos;
-	CoordTf::VECTOR3 vPos3 = sk1->getCollisionParameter(0)->Pos;
 
-	/*pd[0].Instancing(vPos,
-		{ 0, 0, thetaO },
-		{ 10, 10, 10 }, { 0, 0, 0, -0.3f });
+	DxText::GetInstance()->
+		UpDateValue(sk1->getCollisionParameter(0)->HP, 10, 100, 30.0f, 10, {1.0f, 1.0f, 1.0f, 1.0f});
+	DxText::GetInstance()->
+		UpDateValue(en->getCollisionParameter(0)->HP, 10, 120, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+	
+	CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
+	float r0 = en->getAttackParameter(0)->Range;
+	CoordTf::VECTOR3 vPos1 = en->getCollisionParameter(0)->Pos;
+	float r1 = en->getCollisionParameter(0)->Range;
+	
+	CoordTf::VECTOR3 vPos2 = sk1->getAttackParameter(0)->Pos;
+	CoordTf::VECTOR3 vPos3 = sk1->getAttackParameter(1)->Pos;
+	float r2 = sk1->getAttackParameter(0)->Range;
+	float r3 = sk1->getAttackParameter(0)->Range;
+	CoordTf::VECTOR3 vPos4 = sk1->getCollisionParameter(0)->Pos;
+	float r4 = sk1->getCollisionParameter(0)->Range;
+
+	pd[0].Instancing(vPos,
+		{ 0, 0, 0 },
+		{ r0, r0, r0 }, { 0, 0, 0, -0.3f });
 	pd[0].Instancing(vPos1,
-		{ 0, 0, thetaO },
-		{ 10, 10, 10 }, { 0, 0, 0, -0.3f });*/
+		{ 0, 0, 0 },
+		{ r1, r1, r1 }, { 0, 0, 0, -0.3f });
 	pd[0].Instancing(vPos2,
-		{ 0, 0, thetaO },
-		{ 35, 35, 35 }, { 0, -1, -1, -0.4f });
+		{ 0, 0, 0 },
+		{ r2, r2, r2 }, { 0, -1, -1, -0.4f });
 	pd[0].Instancing(vPos3,
-		{ 0, 0, thetaO },
-		{ 10, 10, 10 }, { 0, -1, -1, -0.4f });
+		{ 0, 0, 0 },
+		{r3, r3, r3 }, { 0, -1, -1, -0.4f });
+	pd[0].Instancing(vPos4,
+		{ 0, 0, 0 },
+		{ r4, r4, r4 }, { 0, -1, -1, -0.4f });
 	pd[0].InstancingUpdate(
 		0.2f,
 		0.2f,

@@ -21,14 +21,24 @@ void CollisionTest::update() {
 			if (j == i || carr[i]->meshNo == carr[j]->meshNo)continue;
 			float dist = Util::dist3d(carr[i]->nextPos, carr[j]->nextPos);
 			if (carr[i]->Range + carr[j]->Range > dist) {
-				carr[i]->hit = true;
+				carr[i]->Chit = true;
 				addpos[i] = Util::getWallRubbingVector(carr[j]->Pos, carr[i]->Pos, carr[i]->nextPos);
+			}
+		}
+	}
+	for (int i = 0; i < cnum; i++) {
+		for (int j = 0; j < anum; j++) {
+			if (j == i || carr[i]->meshNo == aarr[j]->meshNo)continue;
+			float dist = Util::dist3d(carr[i]->nextPos, aarr[j]->Pos);
+			if (!carr[i]->Ahit && !carr[i]->down && carr[i]->Range + aarr[j]->Range > dist) {
+				carr[i]->Ahit = true;
+				carr[i]->HP -= aarr[j]->att;
 			}
 		}
 	}
 
 	for (int i = 0; i < cnum; i++) {
-		if (carr[i]->hit) {
+		if (carr[i]->Chit) {
 			CoordTf::VECTOR3 v = addpos[i];
 			CoordTf::VECTOR3 v1 = carr[i]->Pos;
 			carr[i]->Pos.as(v1.x + v.x, v1.y + v.y, v1.z + v.z);
