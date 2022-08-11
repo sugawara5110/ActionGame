@@ -30,9 +30,10 @@ void CollisionTest::update() {
 		for (int j = 0; j < anum; j++) {
 			if (j == i || carr[i]->meshNo == aarr[j]->meshNo)continue;
 			float dist = Util::dist3d(carr[i]->nextPos, aarr[j]->Pos);
-			if (!carr[i]->Ahit && !carr[i]->down && carr[i]->Range + aarr[j]->Range > dist) {
+			if (!carr[i]->Ahit && !carr[i]->down && aarr[j]->effect[0] && carr[i]->Range + aarr[j]->Range > dist) {
 				carr[i]->Ahit = true;
 				carr[i]->HP -= aarr[j]->att;
+				aarr[j]->effect[0] = false;
 			}
 		}
 	}

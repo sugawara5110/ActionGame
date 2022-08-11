@@ -36,7 +36,7 @@ void Enemy::create() {
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
-		ap[i].Range = 20.0f;
+		ap[i].Range = 40.0f;
 		ap[i].att = 20.0f;
 	}
 }
@@ -60,20 +60,28 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		thetaRangeIndex = 1 - thetaRangeIndex;
 	}
 
-	if (Update(meshIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
+	animTime += m;
+	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
 		if (cp[0].down) {
 			cp[0].down = false;
 		}
+		animTime = 0.0f;
+		ap[0].effect[1] = false;
 	}
 	lastPos.as(dpos.getCurrent().x, dpos.getCurrent().y);
 
 	if (dpos.update(target, 0.003f, AnimThreshold)) {
-		internalIndex = 0;
+		internalIndex = 0;//UŒ‚
 		AnimThreshold = 80.0f;
 	}
 	else {
 		internalIndex = 1;
 		AnimThreshold = 50.0f;
+	}
+
+	if (!ap[0].effect[0] && !ap[0].effect[1] && internalIndex == 0 && animTime > 100.0f && animTime < 500.0f) {
+		ap[0].effect[0] = true;
+		ap[0].effect[1] = true;
 	}
 
 	cp[0].nextPos = dpos.getCurrent();

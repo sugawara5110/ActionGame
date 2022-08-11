@@ -23,6 +23,7 @@ struct AttackParameter {
 	float Range = 0.0f;
 	int att = 0;
 	int meshNo = -1;
+	bool effect[2] = {};
 };
 
 class CollisionTest {

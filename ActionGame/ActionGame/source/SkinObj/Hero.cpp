@@ -67,8 +67,8 @@ void Hero::update() {
 	}
 
 	float m = tfloat.Add(1.0f);
-	if (Update(meshIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0,theta }, { scale,scale,scale }, internalIndex)) {
-		meshIndex = 0;
+	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0,theta }, { scale,scale,scale }, internalIndex)) {
+		animIndex = 0;
 		internalIndex = 0;
 		if (cp[0].down) {
 			cp[0].down = false;
@@ -82,22 +82,22 @@ void Hero::update() {
 		case DIK_NUMPAD0:
 			break;
 		case DIK_NUMPAD1:
-			meshIndex = 0;
+			animIndex = 0;
 			internalIndex = 0;
 			Util::thetaCalc(&theta, -tfloat.Add(0.3f));
 			break;
 		case DIK_NUMPAD2:
-			meshIndex = 4;
+			animIndex = 4;
 			internalIndex = 0;
 			addMov = tfloat.Add(0.05f);
 			break;
 		case DIK_NUMPAD3:
-			meshIndex = 0;
+			animIndex = 0;
 			internalIndex = 0;
 			Util::thetaCalc(&theta, tfloat.Add(0.3f));
 			break;
 		case DIK_NUMPAD4:
-			meshIndex = 1;
+			animIndex = 1;
 			internalIndex = 0;
 			addMov = -tfloat.Add(0.1f);
 			Util::thetaCalc(&theta, -tfloat.Add(0.2f));
@@ -105,24 +105,24 @@ void Hero::update() {
 		case DIK_NUMPAD5:
 			break;
 		case DIK_NUMPAD6:
-			meshIndex = 1;
+			animIndex = 1;
 			internalIndex = 0;
 			addMov = -tfloat.Add(0.1f);
 			Util::thetaCalc(&theta, tfloat.Add(0.2f));
 			break;
 		case DIK_NUMPAD7:
-			meshIndex = 1;
+			animIndex = 1;
 			internalIndex = 0;
 			addMov = -tfloat.Add(0.1f);
 			Util::thetaCalc(&theta, -tfloat.Add(0.1f));
 			break;
 		case DIK_NUMPAD8:
-			meshIndex = 1;
+			animIndex = 1;
 			internalIndex = 0;
 			addMov = -tfloat.Add(0.1f);
 			break;
 		case DIK_NUMPAD9:
-			meshIndex = 1;
+			animIndex = 1;
 			internalIndex = 0;
 			addMov = -tfloat.Add(0.1f);
 			Util::thetaCalc(&theta, tfloat.Add(0.1f));
@@ -130,7 +130,7 @@ void Hero::update() {
 		}
 		switch (DxInput::GetInstance()->checkKeyActionNo()) {
 		case DIK_A:
-			meshIndex = 0;
+			animIndex = 0;
 			internalIndex = 0;
 			break;
 		case DIK_S:
@@ -139,27 +139,32 @@ void Hero::update() {
 		case DIK_D:
 			break;
 		case DIK_F:
-			meshIndex = 2;
+			animIndex = 2;
 			internalIndex = 0;
 			break;
 		case DIK_G:
-			meshIndex = 3;
+			animIndex = 3;
 			internalIndex = 0;
 			break;
 		case DIK_H:
-			meshIndex = 3;
+			animIndex = 3;
 			internalIndex = 1;
 			break;
 		case DIK_J:
-			meshIndex = 3;
+			animIndex = 3;
 			internalIndex = 2;
 			break;
 		}
 	}
 	else {
-		meshIndex = 0;
+		animIndex = 0;
 		internalIndex = 1;
 	}
+
+	if (!ap[0].effect[0] && (animIndex == 2 || animIndex == 3)) {
+		ap[0].effect[0] = true;
+	}
+
 	using namespace CoordTf;
 
 	VECTOR3 pAdd = { 0.0f,addMov,0.0f };

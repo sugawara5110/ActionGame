@@ -12,7 +12,8 @@ class SkinObj :public SkinMeshBloom {
 
 protected:
 	float theta = 0.0f;
-	int meshIndex = 0;
+	int animIndex = 0;
+	float animTime = 0.0f;
 	int internalIndex = 0;
 	float scale = 0.0f;
 
