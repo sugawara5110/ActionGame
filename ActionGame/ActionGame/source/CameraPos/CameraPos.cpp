@@ -41,5 +41,6 @@ void CameraPos::update(CoordTf::VECTOR3 subjectPos, float subjectTheta,
 
 	Pos.update(TargetPos, delay, range);
 
-	Dx12Process::GetInstance()->Cameraset(Pos.getCurrent(), GazePoint.getCurrent());
+	Dx_SwapChain* sw = Dx_SwapChain::GetInstance();
+	sw->Cameraset(Pos.getCurrent(), GazePoint.getCurrent());
 }

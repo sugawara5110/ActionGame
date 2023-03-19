@@ -6,15 +6,14 @@
 void Enemy::create() {
 	SetState(true, true);
 	GetFbx("mesh/golem/ICE2 all.fbx");
-	float end[2] = { 1200,2000 };
+	float end[2] = { (float)getMaxEndframe(0,0),(float)getMaxEndframe(0,1) };
 	GetBuffer(1, 2, end);
 	setMaterialType(EMISSIVE, 0, 0);
-	createBloomParameter();
 
 	SetVertex(true);
 	SetConnectStep(0, 2000);
 
-	CreateFromFBX();
+	CreateFromFBX(0);
 
 	dpos.init({ 0.0f, -150.0f, -15.0f });
 	lastPos.as(0.0f, -160.0f);
@@ -55,7 +54,7 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		cp[0].down = true;
 	}
 
-	float m = tfloat.Add(0.5f);
+	float m = tfloat.Add(0.05f);
 	if (dtheta.update(Util::getThetaXY({ dpos.getCurrent().x, dpos.getCurrent().y }, lastPos), 0.02f, thetaRange[thetaRangeIndex])) {
 		thetaRangeIndex = 1 - thetaRangeIndex;
 	}
@@ -79,7 +78,7 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		AnimThreshold = 50.0f;
 	}
 
-	if (!ap[0].effect[0] && !ap[0].effect[1] && internalIndex == 0 && animTime > 100.0f && animTime < 500.0f) {
+	if (!ap[0].effect[0] && !ap[0].effect[1] && internalIndex == 0 && animTime > 100.0f && animTime < 400.0f) {
 		ap[0].effect[0] = true;
 		ap[0].effect[1] = true;
 	}

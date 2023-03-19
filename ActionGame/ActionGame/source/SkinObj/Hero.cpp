@@ -5,31 +5,33 @@
 void Hero::create() {
 	SetState(true, true);
 	GetFbx("mesh/p1/player1_all.fbx");//立ち, ダウン
-	float end[2] = { 4000,1000 };
+	float end[2] = { (float)getMaxEndframe(0,0),(float)getMaxEndframe(0,1) };
 	GetBuffer(1, 2, end);
-	createBloomParameter();
 
 	GetFbxSub("mesh/p1/player1_Run.fbx", 1);
-	GetBuffer_Sub(1, 400);
+	GetBuffer_Sub(1, 40);
 
 	GetFbxSub("mesh/p1/player1_Hook.fbx", 2);
-	GetBuffer_Sub(2, 1000);
+	GetBuffer_Sub(2, (float)getMaxEndframe(2, 0));
 
 	GetFbxSub("mesh/p1/player1_kick.fbx", 3);//キック3種類
-	float end1[3] = { 3000,3000,3000 };
+	float end1[3] = { 
+		(float)getMaxEndframe(3,0),
+		(float)getMaxEndframe(3,1),
+		(float)getMaxEndframe(3,2) };
 	GetBuffer_Sub(3, 3, end1);
 
 	GetFbxSub("mesh/p1/player1_backWalk.fbx", 4);//後退
-	GetBuffer_Sub(4, 800);
+	GetBuffer_Sub(4, (float)getMaxEndframe(4, 0));
 
 	SetVertex(true);
-	SetConnectStep(0, 10000);
-	SetConnectStep(1, 1000);
-	SetConnectStep(2, 10000);
-	SetConnectStep(3, 10000);
-	SetConnectStep(4, 1000);
+	SetConnectStep(0, 1000);
+	SetConnectStep(1, 100);
+	SetConnectStep(2, 1000);
+	SetConnectStep(3, 1000);
+	SetConnectStep(4, 100);
 
-	CreateFromFBX();
+	CreateFromFBX(0);
 	CreateFromFBX_SubAnimation(1);
 	CreateFromFBX_SubAnimation(2);
 	CreateFromFBX_SubAnimation(3);
@@ -66,7 +68,7 @@ void Hero::update() {
 		cp[0].down = true;
 	}
 
-	float m = tfloat.Add(1.0f);
+	float m = tfloat.Add(0.1f);
 	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0,theta }, { scale,scale,scale }, internalIndex)) {
 		animIndex = 0;
 		internalIndex = 0;

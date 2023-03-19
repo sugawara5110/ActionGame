@@ -6,6 +6,7 @@
 #include"../../../Common/Direct3DWrapperOption/Dx_ParticleData.h"
 #include"../../../Common/Direct3DWrapperOption/Dx_PostEffect.h"
 #include"../../../Common/Direct3DWrapperOption/Dx_Wave.h"
+#include"../../../Common/Direct3DWrapperOption/Dx_Bloom.h"
 #include"../../../Common/Window/Win.h"
 #include"../../../JPGLoader/JPGLoader.h"
 #include"../../../PNGLoader/PNGLoader.h"
@@ -16,6 +17,7 @@
 #include"../../../TIFLoader/TIFLoader.h"
 #include"../../../CreateGeometry/CreateGeometry.h"
 #include"../../../Common/DirectStorageWrapper/DStorage.h"
+#include"../../../T_float/T_float.h"
 #include"SkinObj/Hero.h"
 #include"SkinObj/Enemy.h"
 #include"CameraPos/CameraPos.h"
@@ -57,11 +59,10 @@ namespace {
 	//ウィンドウハンドル
 	HWND hWnd;
 	MSG msg;
-	Dx12Process* dx;
 	DxText* text;
-	DXR_Basic* dxr;
+	DxrRenderer* dxr;
 	PolygonData* pd;
-	PolygonDataBloom* pdbl;
+	PolygonData* pdbl;
 	Hero* sk1;
 	Enemy* en;
 	Wave* wav;
@@ -70,16 +71,16 @@ namespace {
 	PolygonData* soto;
 	Movie* mov;
 	Control* con;
-	VariableBloom* variableBloom;
+	Dx_Bloom* bl;
 	CameraPos cam;
-	UserInterfaceMeter ui;
+	UserInterfaceMeter* ui;
 	CollisionTest ctest;
 }
 
 #include <vector>
 #include <memory>
 
-void createTexture2(Dx12Process* dx) {
+void createTexture2() {
 	SearchFile* sf = new SearchFile(1);
 	char** strE = new char* [2];
 	strE[0] = "jpg";
@@ -104,7 +105,7 @@ void createTexture2(Dx12Process* dx) {
 	DStorage::Delete();
 
 	for (int i = 0; i < numFile1; i++) {
-		dx->createTextureArr(numFile1, i, Dx_Util::GetNameFromPass(ip[i].getFileName()),
+		Dx_TextureHolder::GetInstance()->createTextureArr(numFile1, i, Dx_Util::GetNameFromPass(ip[i].getFileName()),
 			R[i].Subresource, ip[i].format,
 			ip[i].width, ip[i].width * 4, ip[i].height, R[i].Texture);
 	}
@@ -120,26 +121,37 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (Createwindow(&hWnd, hInstance, nCmdShow, CURRWIDTH, CURRHEIGHT, L"ActionGame") == -1)return -1;
 
 	//DirectX12ラッパー
-	Dx12Process::InstanceCreate();
-	dx = Dx12Process::GetInstance();
+	Dx_Device::InstanceCreate();
+	Dx_Device::GetInstance()->createDevice();
+	Dx_Device::GetInstance()->reportLiveDeviceObjectsOn();
+	Dx_CommandManager::InstanceCreate();
+	Dx_SwapChain::InstanceCreate();
+
+	Dx_TextureHolder::InstanceCreate();
+	Dx_TextureHolder* dx = Dx_TextureHolder::GetInstance();
 	con = Control::GetInstance();
-	dx->dxrCreateResource();
-	dx->setPerspectiveFov(45, 0, 300);
-	dx->setNumResourceBarrier(1024);
-	//dx->reportLiveDeviceObjectsOn();
-	dx->setNumRtv(3);
-	dx->Initialize(hWnd, CURRWIDTH, CURRHEIGHT);
-	//dx->wireFrameTest(true);
-	//dx->NorTestOn();
-	dx->setGlobalAmbientLight(0.0600f, 0.0600f, 0.0600f);
+	Dx_Device* dev = Dx_Device::GetInstance();
+	dev->dxrCreateResource();
+	Dx_SwapChain* sw = Dx_SwapChain::GetInstance();
+
+	Dx_CommandManager::setNumResourceBarrier(1024);
+
+	sw->Initialize(hWnd, CURRWIDTH, CURRHEIGHT);
+
+	sw->setPerspectiveFov(55, 1, 10000);
+	Dx_Light::Initialize();
+	Dx_ShaderHolder::CreateShaderByteCode();
+
+	Dx_Light::setGlobalAmbientLight(0.0600f, 0.0600f, 0.0600f);
 	DxInput* di = DxInput::GetInstance();
 	di->create(hWnd);
 	di->SetWindowMode(true);
-	ui.setNumMeter(1);
+	ui = new UserInterfaceMeter();
+	ui->setNumMeter(1);
 	di->setCorrectionX(1.015f);
 	di->setCorrectionY(1.055f);
 
-	createTexture2(dx);
+	createTexture2();
 
 	//文字入力
 	DxText::InstanceCreate();
@@ -147,8 +159,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	mov = new Movie("tex/torch1.avi");
 
 	pd = new PolygonData[numPolygon];
-	pdbl = new PolygonDataBloom[2];
-	variableBloom = new VariableBloom();
+	pdbl = new PolygonData[2];
+	bl = new Dx_Bloom();
 	bil = new ParticleData();
 	wav = new Wave();
 	soto = new PolygonData();
@@ -216,7 +228,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	pdbl[0].setVertex(v, 24, ind, 36);
 	pdbl[1].setVertex(v, 24, ind, 36);
 
-	wav->SetCommandList(0);
 	wav->GetVBarray(1);
 	//wav->SetVertex(v, 24, &ind[30], 6);
 	wav->SetVertex(ver4, 4, index6, 6);
@@ -233,28 +244,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ARR_DELETE(sv);
 	ARR_DELETE(svI);
 
-	dx->Bigin(0);
+	Dx_CommandManager* cMa = Dx_CommandManager::GetInstance();
+	Dx_CommandListObj* cObj = cMa->getGraphicsComListObj(0);
+
+	cObj->Bigin();
 	sk1->create();
 	en->create();
-	UINT gaSize[7] = {
-				512,256,128,64,32,16,8
-	};
-	BloomParameter** bp;
-	int numskBl = sk1->getNumBloomParameter();
-	int numenBl = en->getNumBloomParameter();
-	bp = new BloomParameter * [2 + numenBl + numskBl];
-	int bpIndex = 0;
-	bp[bpIndex++] = pdbl[0].getBloomParameter();
-	bp[bpIndex++] = pdbl[1].getBloomParameter();
-	for (int i = 0; i < numskBl; i++)
-		bp[bpIndex++] = sk1->getBloomParameter(i);
-
-	for (int i = 0; i < numenBl; i++)
-		bp[bpIndex++] = en->getBloomParameter(i);
-
-	variableBloom->SetCommandList(0);
-	variableBloom->init(bp, bpIndex, true, 7, gaSize);
-
+	
 	int cNum1 = en->getNumCollisionParameter();
 	int cNum2 = sk1->getNumCollisionParameter();
 	std::unique_ptr<CollisionParameter* []> cPara;
@@ -281,69 +277,87 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ctest.init(cPara.get(), cNum1 + cNum2, aPara.get(), aNum1 + aNum2);
 
 	bil->setMaterialType(EMISSIVE);
-	bil->CreateBillboard(true, true);
+	bil->CreateBillboard(0,true, true);
 	
 	wav->SetCol(0.5f, 0.5f, 0.5f, 1, 1, 1);
 	wav->setMaterialType((MaterialType)(TRANSLUCENCE | METALLIC));
-	wav->Create(-1/*dx->GetTexNumber("maru.png")*//*dx->GetTexNumber("wave.jpg")*/, -1, true, true, 0.05f, 64.0f, true);
+	wav->Create(0,-1/*dx->GetTexNumber("maru.png")*//*dx->GetTexNumber("wave.jpg")*/, -1, true, true, 0.05f, 64.0f, true);
 
 	//gr->setMaterialType(METALLIC);
-	gr->Create(true, dx->GetTexNumber("ground3.jpg"),
+	gr->Create(0,true, dx->GetTexNumber("ground3.jpg"),
 		dx->GetTexNumber("ground3Nor.png"),
 		dx->GetTexNumber("ground3.jpg"), true, true, true);
 	//gr->getParameter()->updateF = true;
 
-	pd[0].Create(true, dx->GetTexNumber("siro.png"),
+	pd[0].Create(0,true, dx->GetTexNumber("siro.png"),
 		-1/*dx->GetTexNumber("wall1Nor.png")*/,
 		-1/*dx->GetTexNumber("wall1.jpg")*/, true, true, false);
 	pd[1].setMaterialType(METALLIC);
-	pd[1].Create(true, dx->GetTexNumber("ceiling5.jpg"), -1/*dx->GetTexNumber("ceiling5Nor.png")*/, -1, false, true);
+	pd[1].Create(0,true, dx->GetTexNumber("ceiling5.jpg"), -1/*dx->GetTexNumber("ceiling5Nor.png")*/, -1, false, true);
 	pdbl[0].setMaterialType(EMISSIVE);
-	pdbl[0].Create(false, dx->GetTexNumber("siro.png"), -1, -1, false, false);
+	pdbl[0].Create(0,false, dx->GetTexNumber("siro.png"), -1, -1, false, false);
 	pdbl[1].setMaterialType(EMISSIVE);
-	pdbl[1].Create(false, dx->GetTexNumber("siro.png"), -1, -1, false, false);
-	pd[2].Create(true, dx->GetTexNumber("boss_magic.png"), -1, -1, true, true);
+	pdbl[1].Create(0,false, dx->GetTexNumber("siro.png"), -1, -1, false, false);
+	pd[2].Create(0,true, dx->GetTexNumber("boss_magic.png"), -1, -1, true, true);
 	pd[3].setMaterialType(TRANSLUCENCE);
-	pd[3].Create(true, dx->GetTexNumber("siro.png"), dx->GetTexNumber("wall1Nor.png"), -1, false, false, false);
+	pd[3].Create(0,true, dx->GetTexNumber("siro.png"), dx->GetTexNumber("wall1Nor.png"), -1, false, false, false);
 
 	soto->setMaterialType((MaterialType)(DIRECTIONLIGHT | NONREFLECTION));
-	soto->Create(true, dx->GetTexNumber("wall1.jpg"),
+	soto->Create(0,true, dx->GetTexNumber("wall1.jpg"),
 		dx->GetTexNumber("wall1Nor.png"),
 		dx->GetTexNumber("wall1.jpg"), false, false);
 
-	ui.create(0, 200, 50, "衝突位置テスト");
+	ui->create(0, 200, 50, "衝突位置テスト");
 
-	dx->End(0);
-	dx->RunGpu();
-	dx->WaitFence();
+	cObj->End();
+	cMa->RunGpu();
+	cMa->WaitFence();
 
-	int numEnemy = en->getNumParameterDXR();
-	int numMesh1 = sk1->getNumParameterDXR();
+	int numEnemy = en->getNumMesh();
+	int numMesh1 = sk1->getNumMesh();
 	UINT numMT = numPolygon + numMesh1 + numEnemy + 4 + 2;
 
-	ParameterDXR** pdx = new ParameterDXR * [numMT];
+	int blId[3] = {};
 
-	int dxrCnt = 0;
+	std::vector<ParameterDXR*> pdx;
 
 	for (int i = 0; i < numEnemy; i++)
-		pdx[dxrCnt++] = en->getParameterDXR(i);
+		pdx.push_back(en->getParameter(i));
 
 	for (int i = 0; i < numPolygon; i++)
-		pdx[dxrCnt++] = pd[i].getParameter();
+		pdx.push_back(pd[i].getParameter());
 
 	for (int i = 0; i < numMesh1; i++)
-		pdx[dxrCnt++] = sk1->getParameterDXR(i);
+		pdx.push_back(sk1->getParameter(i));
 
-	pdx[dxrCnt++] = wav->getParameter();
-	pdx[dxrCnt++] = bil->getParameter();
-	pdx[dxrCnt++] = gr->getParameter();
-	pdx[dxrCnt++] = soto->getParameter();
-	pdx[dxrCnt++] = pdbl[0].getParameter();
-	pdx[dxrCnt++] = pdbl[1].getParameter();
+	blId[0] = 0;
+	blId[1] = blId[2] = numEnemy + numPolygon + numMesh1;
 
-	dxr = new DXR_Basic();
-	dxr->initDXR(numMT, pdx, 10);
+	pdx.push_back(wav->getParameter());
+	pdx.push_back(bil->getParameter());
+	pdx.push_back(gr->getParameter());
+	pdx.push_back(soto->getParameter());
+	pdx.push_back(pdbl[0].getParameter());
+	pdx.push_back(pdbl[1].getParameter());
+	blId[1] += 4;
+	blId[2] += 5;
+	dxr = new DxrRenderer();
+	dxr->initDXR(pdx, 10);
 
+	std::vector<std::vector<uint32_t>> gausu = {
+		{256, 128},
+		{128, 32,8},
+		{128,32,8}
+	};
+	std::vector<float> sigma = { 10,15,12 };
+	std::vector<Dx_Bloom::GaussianType> type = { Dx_Bloom::GaussianType::Type1D, Dx_Bloom::GaussianType::Type1D, Dx_Bloom::GaussianType::Type1D };
+
+	bl->Create(0, 3, dxr->getInstanceIdMap(), &sigma, &gausu, &type);
+
+	UINT gaSize[7] = {
+				512,256,128,64,32,16,8
+	};
+	
 	MultiThread th;
 	th.setFunc(update);
 	th.setFunc(draw);
@@ -357,9 +371,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		T_float::GetTime(hWnd);
 		T_float::GetTimeUp(hWnd);
 
-		dx->Bigin(0);
+		cObj->Bigin();
 		bil->SetTextureMPixel(0, mov->GetFrame(256, 256, 50));
-		dx->End(0);
+		cObj->End();
 
 		dxr->allSwapIndex();
 
@@ -367,43 +381,53 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		th.wait();
 
-		dx->RunGpuCom();
-		dx->RunGpu();
-		dx->WaitFenceCom();
-		dx->WaitFence();
+		cMa->RunGpuCom();
+		cMa->RunGpu();
+		cMa->WaitFenceCom();
+		cMa->WaitFence();
 		UpdateDxrDivideBuffer();
 
-		dx->Bigin(4);
+		Dx_CommandListObj* cObj4 = cMa->getGraphicsComListObj(4);
+
+		cObj4->Bigin();
 		dxr->copyBackBuffer(4);
 		dxr->copyDepthBuffer(4);
-		dx->End(4);
-		dx->RunGpu();
-		dx->WaitFence();
+		cObj4->End();
+		cMa->RunGpu();
+		cMa->WaitFence();
 
-		dx->Bigin(4);
-		dx->BiginDraw(4, false);
+		Dx_Bloom::InstanceParam pa1 = {};
+		pa1.bloomStrength = 10.0f;
+		pa1.EmissiveInstanceId = blId[0];
+		pa1.thresholdLuminance = 0.0f;
+		Dx_Bloom::InstanceParam pa2 = {};
+		pa2.bloomStrength = 8.0f;
+		pa2.EmissiveInstanceId = blId[1];
+		pa2.thresholdLuminance = 0.0f;
+		Dx_Bloom::InstanceParam pa3 = {};
+		pa3.bloomStrength = 8.0f;
+		pa3.EmissiveInstanceId = blId[2];
+		pa3.thresholdLuminance = 0.0f;
 
-		variableBloom->ComputeBloom(4, true);
+		std::vector<Dx_Bloom::InstanceParam>pa = { pa1,pa2,pa3 };
 
-		dx->EndDraw(4);
-		dx->End(4);
-		dx->RunGpu();
-		dx->WaitFence();
+		bl->Compute(4, pa, sw->GetRtBuffer());
 
-		dx->Bigin(4);
-		dx->BiginDraw(4, false);
-		ui.Draw(0, 4);
+		cObj4->Bigin();
+		sw->BiginDraw(4, false);
+		ui->Draw(0, 4);
 		text->Draw(4);
-		dx->EndDraw(4);
-		dx->End(4);
-		dx->RunGpu();
-		dx->WaitFence();
-		dx->DrawScreen();
+		sw->EndDraw(4);
+		cObj4->End();
+		cMa->RunGpu();
+		cMa->WaitFence();
+		sw->DrawScreen();
 	}
 	th.end();
 
-	dx->WaitFence();
-	dx->WaitFenceCom();
+	cMa->WaitFence();
+	cMa->WaitFenceCom();
+	S_DELETE(ui);
 	S_DELETE(gr);
 	S_DELETE(bil);
 	S_DELETE(mov);
@@ -411,22 +435,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	S_DELETE(soto);
 	S_DELETE(sk1);
 	S_DELETE(en);
-	ARR_DELETE(bp);
 	ARR_DELETE(pd);
 	ARR_DELETE(pdbl);
-	S_DELETE(variableBloom);
-	ARR_DELETE(pdx);
+	S_DELETE(bl);
 	S_DELETE(dxr);
 	DxInput::DeleteInstance();
 	Control::DeleteInstance();
 	DxText::DeleteInstance();
-	Dx12Process::DeleteInstance();
+	Dx_SwapChain::DeleteInstance();
+	Dx_TextureHolder::DeleteInstance();
+	Dx_CommandManager::DeleteInstance();
+	Dx_Device::DeleteInstance();
 	return 0;
 }
 
 void update() {
-	dx->SetDirectionLight(true);
-	dx->DirectionLight(0.4f, 0.4f, -1.0f, 0.2f, 0.2f, 0.2f);
+	Dx_Light::SetDirectionLight(true);
+	Dx_Light::DirectionLight(0.4f, 0.4f, -1.0f, 0.2f, 0.2f, 0.2f);
 	float th = tfloat.Add(0.05f);
 	theta = theta += th;
 	if (theta > 360)theta = 0;
@@ -574,11 +599,11 @@ void update() {
 
 	static bool uiF = false;
 	if (!uiF) {
-		ui.updatePos(0, 1, 1, 0, 0);
+		ui->updatePos(0, 1, 1, 0, 0);
 		uiF = true;
 	}
 	else {
-		numVer = ui.updatePosMouse(0, 0.0f) * 3000;
+		numVer = ui->updatePosMouse(0, 0.0f) * 3000;
 	}
 
 	ctest.update();
@@ -588,25 +613,9 @@ void update() {
 
 void draw() {
 	int com = 1;
-	dx->Bigin(com);
-	dx->BiginDraw(com);
-	sk1->setBloomParameter(0, 0.0f, 0.0f);
-	en->setBloomParameter(0, 10.0f, 0.0f);
-	pdbl[0].setBloomParameter(20.0f, 0.0f);
-	pdbl[0].DrawPreparation();
-	pdbl[1].setBloomParameter(5.0f, 0.0f);
-	pdbl[1].DrawPreparation();
-	soto->Draw(com);
-	pd[1].Draw(com);
-	pd[2].Draw(com);
-	gr->Draw(com);
-	wav->Draw(com);
-	pd[0].Draw(com);
-	pd[3].Draw(com);
-	bil->DrawBillboard(com);
-	variableBloom->Draw(com);
-	dx->EndDraw(com);
-
+	Dx_CommandManager* cMa = Dx_CommandManager::GetInstance();
+	Dx_CommandListObj* cObj = cMa->getGraphicsComListObj(com);
+	cObj->Bigin();
 	sk1->StreamOutput(com);//update
 	en->StreamOutput(com);
 	bil->StreamOutputBillboard(com);//update
@@ -619,7 +628,7 @@ void draw() {
 	pd[3].StreamOutput(com);
 	gr->StreamOutput(com);//update
 	wav->StreamOutput(com);//update
-	dx->End(com);
+	cObj->End();
 }
 
 void UpdateDxrDivideBuffer() {
@@ -630,14 +639,18 @@ void UpdateDxrDivideBuffer() {
 
 void AS() {
 	int com = 2;
-	dx->Bigin(com);
+	Dx_CommandManager* cMa = Dx_CommandManager::GetInstance();
+	Dx_CommandListObj* cObj = cMa->getGraphicsComListObj(com);
+	cObj->Bigin();
 	dxr->update_g(com, 6);
-	dx->End(com);
+	cObj->End();
 }
 
 void raytrace() {
 	int com = 3;
-	dx->BiginCom(com);
+	Dx_CommandManager* cMa = Dx_CommandManager::GetInstance();
+	Dx_CommandListObj* cObj = cMa->getComputeComListObj(com);
+	cObj->Bigin();
 	dxr->raytrace_c(com);
-	dx->EndCom(com);
+	cObj->End();
 }
