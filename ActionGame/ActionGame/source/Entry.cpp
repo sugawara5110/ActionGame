@@ -142,7 +142,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Dx_Light::Initialize();
 	Dx_ShaderHolder::CreateShaderByteCode();
 
-	Dx_Light::setGlobalAmbientLight(0.0600f, 0.0600f, 0.0600f);
+	Dx_Light::setGlobalAmbientLight(0.03f, 0.03f, 0.03f);
 	DxInput* di = DxInput::GetInstance();
 	di->create(hWnd);
 	di->SetWindowMode(true);
@@ -214,12 +214,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	VECTOR3 v3s[] = { {1,1,1},{1,1,1},{1,1,1} };
 
 	Vertex* sv = (Vertex*)CreateGeometry::createSphere(10, 10, 1, v3, v3s, false);
-	unsigned int* svI = CreateGeometry::createSphereIndex(10, 10, 1);
+	unsigned int* svI = CreateGeometry::createSphereIndex(10, 10, 1,false);
 
 	Vertex* v = (Vertex*)CreateGeometry::createCube(1, v3, v3s, false);
 	Vertex* vRev = (Vertex*)CreateGeometry::createCube(1, v3, v3s, true);
 
-	unsigned int* ind = CreateGeometry::createCubeIndex(1);
+	unsigned int* ind = CreateGeometry::createCubeIndex(1,false);
+	unsigned int* indr = CreateGeometry::createCubeIndex(1, true);
 	pd[0].setVertex(sv, 11 * 11, svI, 10 * 10 * 6);
 	pd[1].setVertex(v, 24, ind, 36);
 	pd[2].setVertex(v, 24, ind, 36);
@@ -236,11 +237,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	gr->setVertex(v, 24, &ind[30], 6);
 
 	soto->GetVBarray(SQUARE, 1);
-	soto->setVertex(vRev, 24, ind, 36);
+	soto->setVertex(vRev, 24, indr, 36);
 
 	ARR_DELETE(v);
 	ARR_DELETE(vRev);
 	ARR_DELETE(ind);
+	ARR_DELETE(indr);
 	ARR_DELETE(sv);
 	ARR_DELETE(svI);
 
@@ -451,7 +453,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void update() {
 	Dx_Light::SetDirectionLight(true);
-	Dx_Light::DirectionLight(0.4f, 0.4f, -1.0f, 0.2f, 0.2f, 0.2f);
+	Dx_Light::DirectionLight(0.4f, 0.4f, -1.0f, 0.1f, 0.1f, 0.1f);
 	float th = tfloat.Add(0.05f);
 	theta = theta += th;
 	if (theta > 360)theta = 0;
@@ -472,37 +474,37 @@ void update() {
 		UpDateValue(numVer, 10, 10, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
 
 	DxText::GetInstance()->
-		UpDateValue(sk1->getCollisionParameter(0)->HP, 10, 100, 30.0f, 10, {1.0f, 1.0f, 1.0f, 1.0f});
+		UpDateValue(sk1->getCollisionParameter(0)->HP, 10, 100, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
 	DxText::GetInstance()->
 		UpDateValue(en->getCollisionParameter(0)->HP, 10, 120, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
-	
+
 	CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
 	float r0 = en->getAttackParameter(0)->Range;
 	CoordTf::VECTOR3 vPos1 = en->getCollisionParameter(0)->Pos;
 	float r1 = en->getCollisionParameter(0)->Range;
-	
+
 	CoordTf::VECTOR3 vPos2 = sk1->getAttackParameter(0)->Pos;
 	CoordTf::VECTOR3 vPos3 = sk1->getAttackParameter(1)->Pos;
 	float r2 = sk1->getAttackParameter(0)->Range;
-	float r3 = sk1->getAttackParameter(0)->Range;
+	float r3 = sk1->getAttackParameter(1)->Range;
 	CoordTf::VECTOR3 vPos4 = sk1->getCollisionParameter(0)->Pos;
 	float r4 = sk1->getCollisionParameter(0)->Range;
 
-	pd[0].Instancing(vPos,
+	if (en->getAttackParameter(0)->effect)pd[0].Instancing(vPos,
 		{ 0, 0, 0 },
 		{ r0, r0, r0 }, { 0, 0, 0, -0.3f });
 	pd[0].Instancing(vPos1,
 		{ 0, 0, 0 },
-		{ r1, r1, r1 }, { 0, 0, 0, -0.3f });
-	pd[0].Instancing(vPos2,
+		{ r1, r1, r1 }, { -1, -1, 0, -0.3f });
+	if (sk1->getAttackParameter(0)->effect)pd[0].Instancing(vPos2,
 		{ 0, 0, 0 },
 		{ r2, r2, r2 }, { 0, -1, -1, -0.4f });
-	pd[0].Instancing(vPos3,
+	if (sk1->getAttackParameter(1)->effect)pd[0].Instancing(vPos3,
 		{ 0, 0, 0 },
-		{r3, r3, r3 }, { 0, -1, -1, -0.4f });
+		{ r3, r3, r3 }, { 0, -1, -1, -0.4f });
 	pd[0].Instancing(vPos4,
 		{ 0, 0, 0 },
-		{ r4, r4, r4 }, { 0, -1, -1, -0.4f });
+		{ r4, r4, r4 }, { -1, 0, -1, -0.4f });
 	pd[0].InstancingUpdate(
 		0.2f,
 		0.2f,

@@ -219,6 +219,7 @@
     <ClInclude Include="..\..\JPGLoader\JPGLoader.h" />
     <ClInclude Include="..\..\MultiThread\MultiThread.h" />
     <ClInclude Include="..\..\PNGLoader\PNGLoader.h" />
+    <ClInclude Include="..\..\SkinMeshHelper\SkinMeshHelper.h" />
     <ClInclude Include="..\..\T_float\T_float.h" />
     <ClInclude Include="..\..\UserInterface\UserInterface.h" />
     <ClInclude Include="source\CameraPos\CameraPos.h" />
@@ -273,6 +274,7 @@
     <ClCompile Include="..\..\JPGLoader\JPGLoader.cpp" />
     <ClCompile Include="..\..\MultiThread\MultiThread.cpp" />
     <ClCompile Include="..\..\PNGLoader\PNGLoader.cpp" />
+    <ClCompile Include="..\..\SkinMeshHelper\SkinMeshHelper.cpp" />
     <ClCompile Include="..\..\T_float\T_float.cpp" />
     <ClCompile Include="..\..\UserInterface\UserInterface.cpp" />
     <ClCompile Include="source\CameraPos\CameraPos.cpp" />

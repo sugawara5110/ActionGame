@@ -3,16 +3,19 @@
 #include "Enemy.h"
 #include "../Util/Util.h"
 
+#include"../../../../Common/Direct3DWrapperOption/DxText.h"
+
 void Enemy::create() {
 	SetState(true, true);
 	GetFbx("mesh/golem/ICE2 all.fbx");
-	float end[2] = { (float)getMaxEndframe(0,0),(float)getMaxEndframe(0,1) };
+	//float end[2] = { (float)getMaxEndframe(0,0),(float)getMaxEndframe(0,1) };
+	float end[2] = { 126.0f,200.f };
 	GetBuffer(1, 2, end);
 	setMaterialType(EMISSIVE, 0, 0);
 
 	SetVertex(true);
 	SetConnectStep(0, 2000);
-
+	Vertex_hold();
 	CreateFromFBX(0);
 
 	dpos.init({ 0.0f, -150.0f, -15.0f });
@@ -28,14 +31,13 @@ void Enemy::create() {
 		cp[i].nextPos.as(0.0f, -150.0f, -15.0f);
 		cp[i].meshNo = 0;
 		cp[i].Range = 30.0f;
-		cp[i].Weight = 10.0f;
 		cp[i].HP = 2000;
 	}
 	numAp = 1;
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
-		ap[i].Range = 40.0f;
+		ap[i].Range = 50.0f;
 		ap[i].att = 20.0f;
 	}
 }
@@ -45,7 +47,7 @@ static T_float tfloat;
 void Enemy::update(CoordTf::VECTOR3 target) {
 
 	if (cp[0].Chit) {
-		dpos.ImmediatelyUpdate(cp[0].Pos);
+		dpos.ImmediatelyUpdate(cp[0].Pos);//‚±‚ê‚È‚¢‚Æ‚ß‚èž‚Þ
 		cp[0].Chit = false;
 	}
 
@@ -59,28 +61,34 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		thetaRangeIndex = 1 - thetaRangeIndex;
 	}
 
-	animTime += m;
+	DxText::GetInstance()->
+		UpDateValue(AttAnimTime, 10, 200, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+
 	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
 		if (cp[0].down) {
 			cp[0].down = false;
 		}
-		animTime = 0.0f;
-		ap[0].effect[1] = false;
+		AttAnimTime = 0.0f;
 	}
 	lastPos.as(dpos.getCurrent().x, dpos.getCurrent().y);
 
 	if (dpos.update(target, 0.003f, AnimThreshold)) {
 		internalIndex = 0;//UŒ‚
 		AnimThreshold = 80.0f;
+		AttAnimTime += m;
 	}
 	else {
+		AttAnimTime = 0.0f;
 		internalIndex = 1;
 		AnimThreshold = 50.0f;
 	}
 
-	if (!ap[0].effect[0] && !ap[0].effect[1] && internalIndex == 0 && animTime > 100.0f && animTime < 400.0f) {
-		ap[0].effect[0] = true;
-		ap[0].effect[1] = true;
+	bool att = AttAnimTime > 70.0f && AttAnimTime < 100.0f;
+	if (!ap[0].effect && internalIndex == 0 && att) {
+		ap[0].effect = true;
+	}
+	if (ap[0].effect && !att) {
+		ap[0].effect = false;
 	}
 
 	cp[0].nextPos = dpos.getCurrent();

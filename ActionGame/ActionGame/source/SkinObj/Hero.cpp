@@ -15,7 +15,7 @@ void Hero::create() {
 	GetBuffer_Sub(2, (float)getMaxEndframe(2, 0));
 
 	GetFbxSub("mesh/p1/player1_kick.fbx", 3);//ƒLƒbƒN3Ží—Þ
-	float end1[3] = { 
+	float end1[3] = {
 		(float)getMaxEndframe(3,0),
 		(float)getMaxEndframe(3,1),
 		(float)getMaxEndframe(3,2) };
@@ -31,6 +31,8 @@ void Hero::create() {
 	SetConnectStep(3, 1000);
 	SetConnectStep(4, 100);
 
+	Vertex_hold();
+
 	CreateFromFBX(0);
 	CreateFromFBX_SubAnimation(1);
 	CreateFromFBX_SubAnimation(2);
@@ -45,14 +47,13 @@ void Hero::create() {
 	cp[0].nextPos.as(0.0f, 0.0f, -15.0f);
 	cp[0].meshNo = 1;
 	cp[0].Range = 10.0f;
-	cp[0].Weight = 5.0f;
 	cp[0].HP = 1000;
 
 	numAp = 2;
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 1;
-		ap[i].Range = 4.0f;
+		ap[i].Range = 30.0f;
 		ap[i].att = 10.0f;
 	}
 }
@@ -61,7 +62,7 @@ static T_float tfloat;
 
 void Hero::update() {
 
-	if (cp[0].Chit)cp[0].Chit = false;
+	if (cp[0].Chit)cp[0].Chit = false; //Enemy‚É‡‚¹‚Ä‚é
 
 	if (cp[0].Ahit) {
 		cp[0].Ahit = false;
@@ -163,8 +164,11 @@ void Hero::update() {
 		internalIndex = 1;
 	}
 
-	if (!ap[0].effect[0] && (animIndex == 2 || animIndex == 3)) {
-		ap[0].effect[0] = true;
+	if (!ap[0].effect && (animIndex == 2 || animIndex == 3)) {
+		ap[0].effect = true;
+	}
+	if (ap[0].effect && animIndex != 2 && animIndex != 3) {
+		ap[0].effect = false;
 	}
 
 	using namespace CoordTf;

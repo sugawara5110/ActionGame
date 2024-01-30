@@ -103,6 +103,9 @@
     <Filter Include="Library\T_float">
       <UniqueIdentifier>{bbdcbec9-207f-4139-b852-44816c2ef12a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\SkinMeshHelper">
+      <UniqueIdentifier>{04d8acf4-7c32-4482-8983-b64b4a3ecb8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\Shader2D.h">
@@ -360,6 +363,9 @@
     <ClInclude Include="..\..\T_float\T_float.h">
       <Filter>Library\T_float</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\SkinMeshHelper\SkinMeshHelper.h">
+      <Filter>Library\SkinMeshHelper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_BasicPolygon.cpp">
@@ -518,6 +524,9 @@
     </ClCompile>
     <ClCompile Include="..\..\T_float\T_float.cpp">
       <Filter>Library\T_float</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\SkinMeshHelper\SkinMeshHelper.cpp">
+      <Filter>Library\SkinMeshHelper</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

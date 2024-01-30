@@ -14,7 +14,7 @@ class SkinObj :public SkinMesh {
 protected:
 	float theta = 0.0f;
 	int animIndex = 0;
-	float animTime = 0.0f;
+	float AttAnimTime = 0.0f;
 	int internalIndex = 0;
 	float scale = 0.0f;
 
