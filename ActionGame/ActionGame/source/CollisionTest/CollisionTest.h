@@ -11,8 +11,6 @@ struct CollisionParameter {
 	CoordTf::VECTOR3 nextPos = {};
 	float Range = 0.0f;
 	int meshNo = -1;
-	bool Chit = false;
-	bool Ahit = false;
 	int HP = 0;
 	bool down = false;
 };

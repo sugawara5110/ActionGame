@@ -11,7 +11,8 @@ class Enemy :public SkinObj {
 private:
 	DelayPosition dpos = {};
 	DelayTheta dtheta = {};
-	CoordTf::VECTOR2 lastPos = {};
+	float downTime = 0.0f;
+	bool isDown = false;
 	float AnimThreshold = 0.0f;
 	const float thetaRange[2] = { 20.0f, 30.0f };
 	int thetaRangeIndex = 0;

@@ -474,9 +474,17 @@ void update() {
 		UpDateValue(numVer, 10, 10, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
 
 	DxText::GetInstance()->
-		UpDateValue(sk1->getCollisionParameter(0)->HP, 10, 100, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+		UpDateText(DxText::GetInstance()->getStr("Šâ’j‚Ì‘Ì—Í %d",sk1->getCollisionParameter(0)->HP), 100, 40.0f, 30, {1.0f, 1.0f, 1.0f, 1.0f});
 	DxText::GetInstance()->
-		UpDateValue(en->getCollisionParameter(0)->HP, 10, 120, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+		UpDateText(DxText::GetInstance()->getStr("lŠÔ‚Ì‘Ì—Í %d",en->getCollisionParameter(0)->HP), 100, 70.0f, 30, {1.0f, 1.0f, 1.0f, 1.0f});
+	DxText::GetInstance()->
+		UpDateText("Šâ’j‚Ì“–‚½‚è”»’è",100,110,30, { 0, 0, 1, 1.0f });
+	DxText::GetInstance()->
+		UpDateText("Šâ’j‚ÌUŒ‚”»’è", 100, 140, 30, { 1.0, 1.0, 0.3, 1.0f });
+	DxText::GetInstance()->
+		UpDateText("lŠÔ‚Ì“–‚½‚è”»’è", 100, 170, 30, { 0.0, 1.0, 0.0, 1.0f });
+	DxText::GetInstance()->
+		UpDateText("lŠÔ‚ÌUŒ‚”»’è", 100, 200, 30, { 1.0, 0.0, 0.0, 1.0f });
 
 	CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
 	float r0 = en->getAttackParameter(0)->Range;
@@ -492,19 +500,19 @@ void update() {
 
 	if (en->getAttackParameter(0)->effect)pd[0].Instancing(vPos,
 		{ 0, 0, 0 },
-		{ r0, r0, r0 }, { 0, 0, 0, -0.3f });
+		{ r0, r0, r0 }, { 0, 0, -0.7, -0.6f });
 	pd[0].Instancing(vPos1,
 		{ 0, 0, 0 },
-		{ r1, r1, r1 }, { -1, -1, 0, -0.3f });
+		{ r1, r1, r1 }, { -1, -1, 0, -0.6f });
 	if (sk1->getAttackParameter(0)->effect)pd[0].Instancing(vPos2,
 		{ 0, 0, 0 },
-		{ r2, r2, r2 }, { 0, -1, -1, -0.4f });
+		{ r2, r2, r2 }, { 0, -1, -1, -0.6f });
 	if (sk1->getAttackParameter(1)->effect)pd[0].Instancing(vPos3,
 		{ 0, 0, 0 },
-		{ r3, r3, r3 }, { 0, -1, -1, -0.4f });
+		{ r3, r3, r3 }, { 0, -1, -1, -0.6f });
 	pd[0].Instancing(vPos4,
 		{ 0, 0, 0 },
-		{ r4, r4, r4 }, { -1, 0, -1, -0.4f });
+		{ r4, r4, r4 }, { -1, 0, -1, -0.6f });
 	pd[0].InstancingUpdate(
 		0.2f,
 		0.2f,
@@ -562,7 +570,7 @@ void update() {
 	m2 = 1.1f;//”g–ä
 	//m2 = 0.3f;//sin
 	wav->Instancing({ 0, 0, -20 },
-		{ 0,0,thetaO },
+		{ 0,0,0 },
 		{ 140, 140, 15 }, { 0, 0, 0, -0.2f });
 	wav->InstancingUpdate(1, m2,
 		0.0f, 0.5f, 32, 32, 0.7f);

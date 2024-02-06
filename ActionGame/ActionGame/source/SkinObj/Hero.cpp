@@ -46,14 +46,14 @@ void Hero::create() {
 	cp[0].Pos.as(0.0f, 0.0f, -15.0f);
 	cp[0].nextPos.as(0.0f, 0.0f, -15.0f);
 	cp[0].meshNo = 1;
-	cp[0].Range = 10.0f;
+	cp[0].Range = 20.0f;
 	cp[0].HP = 1000;
 
 	numAp = 2;
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 1;
-		ap[i].Range = 30.0f;
+		ap[i].Range = 20.0f;
 		ap[i].att = 10.0f;
 	}
 }
@@ -61,13 +61,6 @@ void Hero::create() {
 static T_float tfloat;
 
 void Hero::update() {
-
-	if (cp[0].Chit)cp[0].Chit = false; //Enemy‚É‡‚¹‚Ä‚é
-
-	if (cp[0].Ahit) {
-		cp[0].Ahit = false;
-		cp[0].down = true;
-	}
 
 	float m = tfloat.Add(0.1f);
 	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0,theta }, { scale,scale,scale }, internalIndex)) {

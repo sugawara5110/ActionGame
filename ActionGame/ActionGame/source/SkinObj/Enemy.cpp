@@ -19,7 +19,6 @@ void Enemy::create() {
 	CreateFromFBX(0);
 
 	dpos.init({ 0.0f, -150.0f, -15.0f });
-	lastPos.as(0.0f, -160.0f);
 	dtheta.init(180.0f);
 	AnimThreshold = 50.0f;
 	scale = 0.11f;
@@ -30,14 +29,14 @@ void Enemy::create() {
 		cp[i].Pos.as(0.0f, -150.0f, -15.0f);
 		cp[i].nextPos.as(0.0f, -150.0f, -15.0f);
 		cp[i].meshNo = 0;
-		cp[i].Range = 30.0f;
+		cp[i].Range = 40.0f;
 		cp[i].HP = 2000;
 	}
 	numAp = 1;
 	ap = new AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
-		ap[i].Range = 50.0f;
+		ap[i].Range = 40.0f;
 		ap[i].att = 20.0f;
 	}
 }
@@ -46,31 +45,29 @@ static T_float tfloat;
 
 void Enemy::update(CoordTf::VECTOR3 target) {
 
-	if (cp[0].Chit) {
-		dpos.ImmediatelyUpdate(cp[0].Pos);//Ç±ÇÍÇ»Ç¢Ç∆ÇﬂÇËçûÇﬁ
-		cp[0].Chit = false;
-	}
-
-	if (cp[0].Ahit) {
-		cp[0].Ahit = false;
-		cp[0].down = true;
-	}
-
 	float m = tfloat.Add(0.05f);
-	if (dtheta.update(Util::getThetaXY({ dpos.getCurrent().x, dpos.getCurrent().y }, lastPos), 0.02f, thetaRange[thetaRangeIndex])) {
+
+	if (dtheta.update(Util::getThetaXY({ target.x,target.y }, { dpos.getCurrent().x, dpos.getCurrent().y }), 0.005f, thetaRange[thetaRangeIndex])) {
 		thetaRangeIndex = 1 - thetaRangeIndex;
 	}
 
-	DxText::GetInstance()->
-		UpDateValue(AttAnimTime, 10, 200, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+	//DxText::GetInstance()->
+		//UpDateValue(AttAnimTime, 10, 200, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
 
-	if (Update(animIndex, m, cp[0].Pos, { 0,0,0,0 }, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
-		if (cp[0].down) {
-			cp[0].down = false;
-		}
+	if (cp[0].down && !isDown) {
+		isDown = true;
+		downTime = 50.0f;
+	}
+	if (isDown && 0.0f > (downTime -= tfloat.Add(0.1f))) {
+		cp[0].down = false;
+		isDown = false;
+	}
+
+	CoordTf::VECTOR4 col = {};
+	if (cp[0].down)col.as(0, -1, -1, 0);
+	if (Update(animIndex, m, cp[0].Pos, col, { 0,0, dtheta.getCurrent() }, { scale,scale,scale }, internalIndex)) {
 		AttAnimTime = 0.0f;
 	}
-	lastPos.as(dpos.getCurrent().x, dpos.getCurrent().y);
 
 	if (dpos.update(target, 0.003f, AnimThreshold)) {
 		internalIndex = 0;//çUåÇ
