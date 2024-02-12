@@ -225,6 +225,7 @@
     <ClInclude Include="source\CameraPos\CameraPos.h" />
     <ClInclude Include="source\CollisionTest\CollisionTest.h" />
     <ClInclude Include="source\DelayPosition\DelayPosition.h" />
+    <ClInclude Include="source\Main\Main.h" />
     <ClInclude Include="source\SkinObj\Enemy.h" />
     <ClInclude Include="source\SkinObj\Hero.h" />
     <ClInclude Include="source\SkinObj\SkinObj.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="source\CollisionTest\CollisionTest.cpp" />
     <ClCompile Include="source\DelayPosition\DelayPosition.cpp" />
     <ClCompile Include="source\Entry.cpp" />
+    <ClCompile Include="source\Main\Main.cpp" />
     <ClCompile Include="source\SkinObj\Enemy.cpp" />
     <ClCompile Include="source\SkinObj\Hero.cpp" />
     <ClCompile Include="source\SkinObj\SkinObj.cpp" />

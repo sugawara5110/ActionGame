@@ -42,7 +42,7 @@ void Hero::create() {
 	scale = 0.02f;
 
 	numCp = 1;
-	cp = new CollisionParameter[numCp];
+	cp = NEW CollisionParameter[numCp];
 	cp[0].Pos.as(0.0f, 0.0f, -15.0f);
 	cp[0].nextPos.as(0.0f, 0.0f, -15.0f);
 	cp[0].meshNo = 1;
@@ -50,7 +50,7 @@ void Hero::create() {
 	cp[0].HP = 1000;
 
 	numAp = 2;
-	ap = new AttackParameter[numAp];
+	ap = NEW AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 1;
 		ap[i].Range = 20.0f;

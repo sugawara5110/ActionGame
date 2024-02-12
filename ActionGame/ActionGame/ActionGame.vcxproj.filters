@@ -366,6 +366,9 @@
     <ClInclude Include="..\..\SkinMeshHelper\SkinMeshHelper.h">
       <Filter>Library\SkinMeshHelper</Filter>
     </ClInclude>
+    <ClInclude Include="source\Main\Main.h">
+      <Filter>Game\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_BasicPolygon.cpp">
@@ -527,6 +530,9 @@
     </ClCompile>
     <ClCompile Include="..\..\SkinMeshHelper\SkinMeshHelper.cpp">
       <Filter>Library\SkinMeshHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Main\Main.cpp">
+      <Filter>Game\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

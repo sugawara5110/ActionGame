@@ -24,7 +24,7 @@ void Enemy::create() {
 	scale = 0.11f;
 
 	numCp = 1;
-	cp = new CollisionParameter[numCp];
+	cp = NEW CollisionParameter[numCp];
 	for (int i = 0; i < numCp; i++) {
 		cp[i].Pos.as(0.0f, -150.0f, -15.0f);
 		cp[i].nextPos.as(0.0f, -150.0f, -15.0f);
@@ -33,7 +33,7 @@ void Enemy::create() {
 		cp[i].HP = 2000;
 	}
 	numAp = 1;
-	ap = new AttackParameter[numAp];
+	ap = NEW AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
 		ap[i].Range = 40.0f;
@@ -69,7 +69,13 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 		AttAnimTime = 0.0f;
 	}
 
-	if (dpos.update(target, 0.003f, AnimThreshold)) {
+	static float delay = 0.0f;
+
+	if (Util::dist3d(target, cp[0].Pos) < 90.0f) {
+		delay = 0.003f;
+	}
+
+	if (dpos.update(target, delay, AnimThreshold)) {
 		internalIndex = 0;//UŒ‚
 		AnimThreshold = 80.0f;
 		AttAnimTime += m;
