@@ -13,6 +13,7 @@ struct CollisionParameter {
 	int meshNo = -1;
 	int HP = 0;
 	bool down = false;
+	int damage = 0;
 };
 
 struct AttackParameter {

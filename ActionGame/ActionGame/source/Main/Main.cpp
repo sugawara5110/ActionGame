@@ -49,8 +49,6 @@ namespace {
 	float theta = 0;
 	float thetaO = 0;
 	T_float tfloat;
-	int parCnt = 0;
-	bool parSwich = false;
 	//ウィンドウハンドル
 	HWND hWnd;
 	MSG msg;
@@ -62,13 +60,13 @@ namespace {
 	Enemy* en;
 	Wave* wav;
 	ParticleData* bil;
+	PostEffect* blur;
 	PolygonData* gr;
 	PolygonData* soto;
 	Movie* mov;
 	Control* con;
 	Dx_Bloom* bl;
 	CameraPos cam;
-	UserInterfaceMeter* ui;
 	CollisionTest ctest;
 
 	void update() {
@@ -89,22 +87,20 @@ namespace {
 		thetaO = thetaO += th1;
 		if (thetaO > 360)thetaO = 0;
 
-		static int numVer = 0;//テスト用
-		//DxText::GetInstance()->
-			//UpDateValue(numVer, 10, 10, 30.0f, 10, { 1.0f, 1.0f, 1.0f, 1.0f });
+#if defined(DEBUG) || defined(_DEBUG) 
 
 		DxText::GetInstance()->
 			UpDateText(DxText::GetInstance()->getStr("人間の体力 %d", sk1->getCollisionParameter(0)->HP), 100, 40.0f, 30, { 1.0f, 1.0f, 1.0f, 1.0f });
 		DxText::GetInstance()->
 			UpDateText(DxText::GetInstance()->getStr("岩男の体力 %d", en->getCollisionParameter(0)->HP), 100, 70.0f, 30, { 1.0f, 1.0f, 1.0f, 1.0f });
 		DxText::GetInstance()->
-			UpDateText("岩男の当たり判定", 100, 110, 30, { 0, 0, 1, 1.0f });
+			UpDateText("岩男の当たり判定", 100, 110, 30, { 1, 1, 1, 1.0f });
 		DxText::GetInstance()->
-			UpDateText("岩男の攻撃判定", 100, 140, 30, { 1.0, 1.0, 0.3, 1.0f });
+			UpDateText("岩男の攻撃判定", 100, 140, 30, { 1.0f, 1.0f, 0.3f, 1.0f });
 		DxText::GetInstance()->
-			UpDateText("人間の当たり判定", 100, 170, 30, { 0.0, 1.0, 0.0, 1.0f });
+			UpDateText("人間の当たり判定", 100, 170, 30, { 0.0f, 1.0f, 0.0f, 1.0f });
 		DxText::GetInstance()->
-			UpDateText("人間の攻撃判定", 100, 200, 30, { 1.0, 0.0, 0.0, 1.0f });
+			UpDateText("人間の攻撃判定", 100, 200, 30, { 1.0f, 0.0f, 0.0f, 1.0f });
 
 		CoordTf::VECTOR3 vPos = en->getAttackParameter(0)->Pos;
 		float r0 = en->getAttackParameter(0)->Range;
@@ -120,10 +116,10 @@ namespace {
 
 		if (en->getAttackParameter(0)->effect)pd[0].Instancing(vPos,
 			{ 0, 0, 0 },
-			{ r0, r0, r0 }, { 0, 0, -0.7, -0.6f });
+			{ r0, r0, r0 }, { 0, 0, -0.7f, -0.6f });
 		pd[0].Instancing(vPos1,
 			{ 0, 0, 0 },
-			{ r1, r1, r1 }, { -1, -1, 0, -0.6f });
+			{ r1, r1, r1 }, { 0, 0, 0, -0.6f });
 		if (sk1->getAttackParameter(0)->effect)pd[0].Instancing(vPos2,
 			{ 0, 0, 0 },
 			{ r2, r2, r2 }, { 0, -1, -1, -0.6f });
@@ -137,6 +133,8 @@ namespace {
 			0.2f,
 			0.2f,
 			4.0f);
+#endif
+
 		float r = (float)(rand() % 11) * 0.1f;
 		float g = (float)(rand() % 11) * 0.1f;
 		float b1 = (float)(rand() % 11) * 0.1f;
@@ -211,30 +209,9 @@ namespace {
 			0,
 			4.0f);
 
-		float sp1 = tfloat.Add(0.03f);
-		parCnt += sp1;
-		if (parCnt > 3) {
-			parCnt = 0; parSwich = true;
-		}
-		float sp = tfloat.Add(0.03f);
-		if (1) {
-			parSwich = false;
-			bil->Update({ 5,0,0 }, { 0,0,0,-0.3f }, 50, 10.0f, false, 0);
-			bil->setPointLight(0, true, 1000, { 0.001f, 0.0001f, 0.001f });
-			bil->setPointLight(1, true, 1000, { 0.001f, 0.0001f, 0.001f });
-		}
-		else {
-			bil->DrawOff();
-		}
-
-		static bool uiF = false;
-		if (!uiF) {
-			ui->updatePos(0, 1, 1, 0, 0);
-			uiF = true;
-		}
-		else {
-			numVer = ui->updatePosMouse(0, 0.0f) * 3000;
-		}
+		bil->Update({ 5,0,0 }, { 0,0,0,-0.3f }, 50, 10.0f, false, 0);
+		bil->setPointLight(0, true, 1000, { 0.001f, 0.0001f, 0.001f });
+		bil->setPointLight(1, true, 1000, { 0.001f, 0.0001f, 0.001f });
 
 		ctest.update();
 
@@ -297,7 +274,7 @@ namespace {
 		ARR_DELETE(strE);
 		int cnt = 0;
 		for (int k = 0; k < 1; k++) {
-			for (int i = 0; i < sf->GetFileNum(k); i++) {
+			for (UINT i = 0; i < sf->GetFileNum(k); i++) {
 				char* str = sf->GetFileName(k, i);
 				ip[cnt].width = 512;
 				ip[cnt].height = 512;
@@ -309,10 +286,11 @@ namespace {
 		std::unique_ptr<OutputResource[]> R = DStorage::Load(device, ip, numFile1);
 		DStorage::Delete();
 
-		for (int i = 0; i < numFile1; i++) {
+		for (UINT i = 0; i < numFile1; i++) {
 			Dx_TextureHolder::GetInstance()->createTextureArr(numFile1, i, Dx_Util::GetNameFromPass(ip[i].getFileName()),
 				R[i].Subresource, ip[i].format,
 				ip[i].width, ip[i].width * 4, ip[i].height, R[i].Texture);
+			ARR_DELETE(R[i].Subresource);//struct OutputResourceに後でデストラクタ追加する
 		}
 
 		ARR_DELETE(ip);
@@ -353,8 +331,6 @@ namespace {
 		DxInput* di = DxInput::GetInstance();
 		di->create(hWnd);
 		di->SetWindowMode(true);
-		ui = NEW UserInterfaceMeter();
-		ui->setNumMeter(1);
 		di->setCorrectionX(1.015f);
 		di->setCorrectionY(1.055f);
 
@@ -374,6 +350,7 @@ namespace {
 		gr = NEW PolygonData();
 		sk1 = NEW Hero();
 		en = NEW Enemy();
+		blur = NEW PostEffect();
 		cam.init({ 0,0,-15.0f }, 0, { 0,150,30 });
 
 		DivideArr arr[3];
@@ -437,7 +414,6 @@ namespace {
 		pdbl[1].setVertex(v, 24, ind, 36);
 
 		wav->GetVBarray(1);
-		//wav->SetVertex(v, 24, &ind[30], 6);
 		wav->SetVertex(ver4, 4, index6, 6);
 
 		gr->GetVBarray(CONTROL_POINT, 1);
@@ -459,6 +435,8 @@ namespace {
 		cObj->Bigin();
 		sk1->create();
 		en->create();
+
+		blur->ComCreateDepthOfField(0);
 
 		int cNum1 = en->getNumCollisionParameter();
 		int cNum2 = sk1->getNumCollisionParameter();
@@ -490,7 +468,7 @@ namespace {
 
 		wav->SetCol(0.5f, 0.5f, 0.5f, 1, 1, 1);
 		wav->setMaterialType((MaterialType)(TRANSLUCENCE | METALLIC));
-		wav->Create(0, -1/*dx->GetTexNumber("maru.png")*//*dx->GetTexNumber("wave.jpg")*/, -1, true, true, 0.05f, 64.0f, true);
+		wav->Create(0, -1/*dx->GetTexNumber("maru.png")*//*dx->GetTexNumber("wave.jpg")*/, -1, true, true, 0.05f, 64, true);
 
 		//gr->setMaterialType(METALLIC);
 		gr->Create(0, true, dx->GetTexNumber("ground3.jpg"),
@@ -514,8 +492,6 @@ namespace {
 		soto->Create(0, true, dx->GetTexNumber("wall1.jpg"),
 			dx->GetTexNumber("wall1Nor.png"),
 			dx->GetTexNumber("wall1.jpg"), false, false);
-
-		ui->create(0, 200, 50, "衝突位置テスト");
 
 		cObj->End();
 		cMa->RunGpu();
@@ -569,6 +545,8 @@ namespace {
 			512,256,128,64,32,16,8
 		};
 
+
+
 		MultiThread th;
 		th.setFunc(update);
 		th.setFunc(draw);
@@ -588,7 +566,7 @@ namespace {
 
 			dxr->allSwapIndex();
 
-			cam.update(sk1->getPos(), sk1->getTheta(), 0.03, 1.0, { 0,150,30 });
+			cam.update(sk1->getPos(), sk1->getTheta(), 0.03f, 1.0f, { 0.0f,150.0f,30.0f });
 
 			th.wait();
 
@@ -629,8 +607,11 @@ namespace {
 			bl->Compute(4, pa, sw->GetRtBuffer());
 
 			cObj4->Bigin();
+			blur->ComputeDepthOfField(4, true, 500, 0.992f, 0.00f);
+			//focusDepth 1.0=iwao, 0.992=ningen 
 			sw->BiginDraw(4, false);
-			//ui->Draw(0, 4);
+			sk1->drawMeter(4);
+			en->drawMeter(4);
 			text->Draw(4);
 			sw->EndDraw(4);
 			cObj4->End();
@@ -642,7 +623,7 @@ namespace {
 
 		cMa->WaitFence();
 		cMa->WaitFenceCom();
-		S_DELETE(ui);
+		S_DELETE(blur);
 		S_DELETE(gr);
 		S_DELETE(bil);
 		S_DELETE(mov);

@@ -5,6 +5,7 @@
 
 #include "../../../../Common/Direct3DWrapper/Dx12Process.h"
 #include "../../../../Common/DirectInputWrapper/DxInput.h"
+#include "../../../../Common/Direct3DWrapperOption/DxText.h"
 #include "../Util/Util.h"
 #include "../CollisionTest/CollisionTest.h"
 #include "../../../../T_float/T_float.h"
@@ -20,8 +21,11 @@ protected:
 
 	CollisionParameter* cp = nullptr;
 	int numCp = 0;
+	int maxHP = 0;
 	AttackParameter* ap = nullptr;
 	int numAp = 0;
+
+	PolygonData2D* Meter[2] = {};
 
 public:
 	~SkinObj();
@@ -33,6 +37,10 @@ public:
 	int getNumCollisionParameter();
 	AttackParameter* getAttackParameter(int index);
 	int getNumAttackParameter();
+	void updateDamage(CoordTf::VECTOR2 adjustPos, CoordTf::VECTOR4 col);
+	void createMeter();
+	void updateMeter(CoordTf::VECTOR2 adjustPos);
+	void drawMeter(int com);
 };
 
 #endif

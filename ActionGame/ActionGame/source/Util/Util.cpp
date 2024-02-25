@@ -26,7 +26,7 @@ float Util::dist3d(CoordTf::VECTOR3 pos1, CoordTf::VECTOR3 pos2) {
 	float dy = pos2.y - pos1.y;
 	float dz = pos2.z - pos1.z;
 
-	return sqrt(dx * dx + dy * dy + dz * dz);
+	return (float)sqrt(dx * dx + dy * dy + dz * dz);
 }
 
 CoordTf::VECTOR3 Util::getSphereNormal(CoordTf::VECTOR3 target, CoordTf::VECTOR3 self) {

@@ -30,15 +30,17 @@ void Enemy::create() {
 		cp[i].nextPos.as(0.0f, -150.0f, -15.0f);
 		cp[i].meshNo = 0;
 		cp[i].Range = 40.0f;
-		cp[i].HP = 2000;
+		cp[i].HP = maxHP = 2000;
 	}
 	numAp = 1;
 	ap = NEW AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 0;
 		ap[i].Range = 40.0f;
-		ap[i].att = 20.0f;
+		ap[i].att = 150;
 	}
+
+	createMeter();
 }
 
 static T_float tfloat;
@@ -98,4 +100,7 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 	theta = dtheta.getCurrent();
 
 	ap[0].Pos = GetVertexPosition(1, 1320);//‰E˜r1320
+
+	updateDamage({ -80,-135 }, { 1, 1, 1, 1 });
+	updateMeter({ -80,-270 });
 }

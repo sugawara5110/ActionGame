@@ -52,6 +52,7 @@ void CollisionTest::update() {
 			if (!carr[i]->down && aarr[j]->effect && carr[i]->Range + aarr[j]->Range > dist) {
 				carr[i]->down = true;
 				carr[i]->HP -= aarr[j]->att;
+				carr[i]->damage = aarr[j]->att;
 			}
 		}
 	}

@@ -47,15 +47,17 @@ void Hero::create() {
 	cp[0].nextPos.as(0.0f, 0.0f, -15.0f);
 	cp[0].meshNo = 1;
 	cp[0].Range = 20.0f;
-	cp[0].HP = 1000;
+	cp[0].HP = maxHP = 1000;
 
 	numAp = 2;
 	ap = NEW AttackParameter[numAp];
 	for (int i = 0; i < numAp; i++) {
 		ap[i].meshNo = 1;
 		ap[i].Range = 20.0f;
-		ap[i].att = 10.0f;
+		ap[i].att = 90;
 	}
+
+	createMeter();
 }
 
 static T_float tfloat;
@@ -176,4 +178,7 @@ void Hero::update() {
 
 	ap[0].Pos = GetVertexPosition(1, 1515);//¶Žè mesh1, 1515
 	ap[1].Pos = GetVertexPosition(6, 382);//¶‘« mesh6, 382
+
+	updateDamage({ -20,-90 }, { 0, 1, 0, 1 });
+	updateMeter({ -20,-180 });
 }
