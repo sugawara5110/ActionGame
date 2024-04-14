@@ -41,6 +41,20 @@ void Enemy::create() {
 	}
 
 	createMeter();
+
+	DxAudio* da = DxAudio::GetInstance();
+	da->Create();
+	for (int i = 0; i < 2; i++) {
+		source[i] = new DxAudioSourceVoice();
+		source[i]->CreateSource("wav\\maou_se_battle_explosion05.wav");
+	}
+}
+
+Enemy::~Enemy() {
+	S_DELETE(source[0]);
+	S_DELETE(source[1]);
+	DxAudio::DeleteInstance();
+	DxAudio::ComUninitialize();
 }
 
 static T_float tfloat;
@@ -100,6 +114,23 @@ void Enemy::update(CoordTf::VECTOR3 target) {
 	theta = dtheta.getCurrent();
 
 	ap[0].Pos = GetVertexPosition(1, 1320);//âEòr1320
+	CoordTf::VECTOR3 footPos[2] = {};
+	footPos[0] = GetVertexPosition(1, 1600);//âEë´
+	footPos[1] = GetVertexPosition(1, 2570);//ç∂ë´
+
+	for (int i = 0; i < 2; i++) {
+		if (internalIndex == 1 && footPosZ1Max[i] >= footPos[i].z) {
+
+			if (!footOn[i]) {
+				source[i]->Stop();
+				source[i]->Start();
+				footOn[i] = true;
+			}
+		}
+		else {
+			footOn[i] = false;
+		}
+	}
 
 	updateDamage({ -80,-135 }, { 1, 1, 1, 1 });
 	updateMeter({ -80,-270 });

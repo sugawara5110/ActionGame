@@ -211,6 +211,7 @@
     <ClInclude Include="..\..\Common\TextureLoader\TextureLoader.h" />
     <ClInclude Include="..\..\Common\Window\Control.h" />
     <ClInclude Include="..\..\Common\Window\Win.h" />
+    <ClInclude Include="..\..\Common\XAudio2Wrapper\DxAudio.h" />
     <ClInclude Include="..\..\CoordTf\CoordTf.h" />
     <ClInclude Include="..\..\CreateGeometry\CreateGeometry.h" />
     <ClInclude Include="..\..\DecompressDeflate\DecompressDeflate.h" />
@@ -222,6 +223,7 @@
     <ClInclude Include="..\..\SkinMeshHelper\SkinMeshHelper.h" />
     <ClInclude Include="..\..\T_float\T_float.h" />
     <ClInclude Include="..\..\UserInterface\UserInterface.h" />
+    <ClInclude Include="..\..\WAVELoader\WAVELoader.h" />
     <ClInclude Include="source\CameraPos\CameraPos.h" />
     <ClInclude Include="source\CollisionTest\CollisionTest.h" />
     <ClInclude Include="source\DelayPosition\DelayPosition.h" />
@@ -267,6 +269,7 @@
     <ClCompile Include="..\..\Common\TextureLoader\TextureLoader.cpp" />
     <ClCompile Include="..\..\Common\Window\Control_Direction.cpp" />
     <ClCompile Include="..\..\Common\Window\Win.cpp" />
+    <ClCompile Include="..\..\Common\XAudio2Wrapper\DxAudio.cpp" />
     <ClCompile Include="..\..\CoordTf\CoordTf.cpp" />
     <ClCompile Include="..\..\CreateGeometry\CreateGeometry.cpp" />
     <ClCompile Include="..\..\DecompressDeflate\DecompressDeflate.cpp" />
@@ -278,6 +281,7 @@
     <ClCompile Include="..\..\SkinMeshHelper\SkinMeshHelper.cpp" />
     <ClCompile Include="..\..\T_float\T_float.cpp" />
     <ClCompile Include="..\..\UserInterface\UserInterface.cpp" />
+    <ClCompile Include="..\..\WAVELoader\WAVELoader.cpp" />
     <ClCompile Include="source\CameraPos\CameraPos.cpp" />
     <ClCompile Include="source\CollisionTest\CollisionTest.cpp" />
     <ClCompile Include="source\DelayPosition\DelayPosition.cpp" />

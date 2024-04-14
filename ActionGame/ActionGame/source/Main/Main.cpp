@@ -45,7 +45,10 @@ namespace {
 		0,2,3
 	};
 
+	float fpz0 = 0.0f;
+	float fpz2 = 0.0f;
 	const int numPolygon = 4;
+	int numAddInstancing = 6;
 	float theta = 0;
 	float thetaO = 0;
 	T_float tfloat;
@@ -107,6 +110,12 @@ namespace {
 		CoordTf::VECTOR3 vPos1 = en->getCollisionParameter(0)->Pos;
 		float r1 = en->getCollisionParameter(0)->Range;
 
+		CoordTf::VECTOR3 footPos = en->GetVertexPosition(1, 1600);//‰E‘«
+		CoordTf::VECTOR3 footPos2 = en->GetVertexPosition(1, 2570);//¶‘«
+
+		if (footPos.z > fpz0)fpz0 = footPos.z;
+		if (footPos2.z > fpz2)fpz2 = footPos2.z;
+		
 		CoordTf::VECTOR3 vPos2 = sk1->getAttackParameter(0)->Pos;
 		CoordTf::VECTOR3 vPos3 = sk1->getAttackParameter(1)->Pos;
 		float r2 = sk1->getAttackParameter(0)->Range;
@@ -129,6 +138,12 @@ namespace {
 		pd[0].Instancing(vPos4,
 			{ 0, 0, 0 },
 			{ r4, r4, r4 }, { -1, 0, -1, -0.6f });
+		pd[0].Instancing(footPos,
+			{ 0, 0, 0 },
+			{ 10, 10, 10 }, { -1, 0, -1, -0.6f });
+		pd[0].Instancing(footPos2,
+			{ 0, 0, 0 },
+			{ 10, 10, 10 }, { -1, 0, -1, -0.6f });
 		pd[0].InstancingUpdate(
 			0.2f,
 			0.2f,
@@ -387,7 +402,7 @@ namespace {
 		bil->SetVertex(1, { -100,0,18 });
 		bil->TextureInit(256, 256);
 
-		pd[0].GetVBarray(SQUARE, 5);
+		pd[0].GetVBarray(SQUARE, 1 + numAddInstancing);
 		pd[1].GetVBarray(SQUARE, 1);
 		pd[2].GetVBarray(SQUARE, 1);
 		pd[3].GetVBarray(SQUARE, 1);
@@ -515,7 +530,7 @@ namespace {
 			pdx.push_back(sk1->getParameter(i));
 
 		blId[0] = 0;
-		blId[1] = blId[2] = blId[3] = numEnemy + (numPolygon + 4) + numMesh1;
+		blId[1] = blId[2] = blId[3] = numEnemy + (numPolygon + numAddInstancing) + numMesh1;
 
 		pdx.push_back(wav->getParameter());
 		pdx.push_back(bil->getParameter());

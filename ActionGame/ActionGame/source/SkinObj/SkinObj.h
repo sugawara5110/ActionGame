@@ -6,6 +6,7 @@
 #include "../../../../Common/Direct3DWrapper/Dx12Process.h"
 #include "../../../../Common/DirectInputWrapper/DxInput.h"
 #include "../../../../Common/Direct3DWrapperOption/DxText.h"
+#include "../../../../Common/XAudio2Wrapper/DxAudio.h"
 #include "../Util/Util.h"
 #include "../CollisionTest/CollisionTest.h"
 #include "../../../../T_float/T_float.h"

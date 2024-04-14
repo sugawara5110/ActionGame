@@ -106,6 +106,12 @@
     <Filter Include="Library\SkinMeshHelper">
       <UniqueIdentifier>{04d8acf4-7c32-4482-8983-b64b4a3ecb8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\Common\XAudio2Wrapper">
+      <UniqueIdentifier>{89159ecb-df64-4ea8-94a7-453f81cc11dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\WAVELoader">
+      <UniqueIdentifier>{79a9cbb6-a7fa-482f-8a06-fdab11e1490e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\ShaderCG\Shader2D.h">
@@ -369,6 +375,12 @@
     <ClInclude Include="source\Main\Main.h">
       <Filter>Game\Main</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Common\XAudio2Wrapper\DxAudio.h">
+      <Filter>Library\Common\XAudio2Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\WAVELoader\WAVELoader.h">
+      <Filter>Library\WAVELoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Common\Direct3DWrapper\DX_3DCG\Core\Dx_BasicPolygon.cpp">
@@ -533,6 +545,12 @@
     </ClCompile>
     <ClCompile Include="source\Main\Main.cpp">
       <Filter>Game\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\XAudio2Wrapper\DxAudio.cpp">
+      <Filter>Library\Common\XAudio2Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\WAVELoader\WAVELoader.cpp">
+      <Filter>Library\WAVELoader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
